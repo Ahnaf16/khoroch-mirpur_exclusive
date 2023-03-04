@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 extension ContextEx on BuildContext {
   MediaQueryData get mq => MediaQuery.of(this);
@@ -56,5 +57,21 @@ extension StringEx on String {
       }
     }
     return capitalizedText;
+  }
+}
+
+extension DateTimeFormat on DateTime {
+  String formateDate([String pattern = 'dd-MM-yyyy\nhh:mm']) {
+    return DateFormat(pattern).format(this);
+  }
+}
+
+extension CurrencyConvert on int {
+  String get toCurrency {
+    return NumberFormat.currency(
+      locale: 'en_BD',
+      decimalDigits: 0,
+      customPattern: '##,##,##,##,### tk',
+    ).format(this);
   }
 }
