@@ -1,10 +1,20 @@
 import 'dart:developer';
 
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gsheets/gsheets.dart';
+import 'package:khoroch/core/extensions.dart';
+import 'package:khoroch/models/users_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class SheetsApi {
+final usersCashCollectionProvider = StateNotifierProvider.autoDispose<
+    UsersCashCollectionNotifier, List<UsersModel>>((ref) {
+  return UsersCashCollectionNotifier()..init();
+});
+
+class UsersCashCollectionNotifier extends StateNotifier<List<UsersModel>> {
+  UsersCashCollectionNotifier() : super(List.empty());
+
   final String _cred = r'''
 {
   "type": "service_account",
@@ -24,7 +34,6 @@ class SheetsApi {
   final pefKey = 'rowCount';
 
   int numberOfRows = 0;
-  List transactions = [];
 
   Worksheet? _worksheet;
 
@@ -40,6 +49,7 @@ class SheetsApi {
 
     final workSheet = spreadSheet.worksheetByTitle(_ssTitle);
     _worksheet = workSheet;
+
     if (count == null) {
       await countRows();
       log('numberOfRows after count: $numberOfRows');
@@ -48,13 +58,45 @@ class SheetsApi {
       numberOfRows = count;
       log('numberOfRows from pref: $numberOfRows');
     }
+    await getAllUser();
     EasyLoading.showSuccess('data loaded');
   }
 
   countRows() async {
-    while ((await _worksheet?.values.value(column: 1, row: numberOfRows + 1)) !=
+    while ((await _worksheet?.values.value(column: 1, row: numberOfRows + 2)) !=
         '') {
       numberOfRows++;
     }
   }
+
+  getUser(int columnNumber) async {
+    List<String> cashCollections = [];
+    for (var i = 0; i < numberOfRows; i++) {
+      final value =
+          await _worksheet?.values.value(column: columnNumber, row: i + 1) ??
+              '0';
+
+      if (value.isNotEmpty) {
+        cashCollections.add(value);
+      }
+    }
+    final collection = UsersModel(
+      name: cashCollections.first,
+      givenCashList: cashCollections.sublist(1).map((e) => e.asInt).toList(),
+    );
+    state = [...state, collection];
+
+    log(collection.toString());
+  }
+
+  getAllUser() async {
+    List<int> usersColumns = [7, 8, 9];
+
+    for (final column in usersColumns) {
+      await getUser(column);
+    }
+  }
+
+  int get getTotalBalance =>
+      state.fold(0, (previous, element) => previous + element.total);
 }

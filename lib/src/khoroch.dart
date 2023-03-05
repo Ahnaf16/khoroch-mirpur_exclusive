@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:khoroch/core/extensions.dart';
-import 'package:khoroch/services/sheets_api.dart';
 import 'package:khoroch/src/balance_card.dart';
 import 'package:khoroch/theme/theme.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class KhorochPage extends ConsumerStatefulWidget {
   const KhorochPage({super.key});
@@ -14,14 +14,6 @@ class KhorochPage extends ConsumerStatefulWidget {
 }
 
 class _KhorochPageState extends ConsumerState<KhorochPage> {
-  final sheetsApi = SheetsApi();
-
-  @override
-  void initState() {
-    super.initState();
-    sheetsApi.init();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -88,14 +80,17 @@ class _KhorochPageState extends ConsumerState<KhorochPage> {
         ],
       ),
       floatingActionButton: GestureDetector(
-        onTap: () {},
+        onTap: () async {
+          final pref = await SharedPreferences.getInstance();
+          pref.clear();
+        },
         child: Container(
           height: 50,
           width: 50,
           decoration: AppTheme.neuDecoration.copyWith(
             borderRadius: BorderRadius.circular(10),
           ),
-          child: const Icon(Icons.add_rounded),
+          child: const Icon(Icons.clear_all),
         ),
       ),
     );
