@@ -82,7 +82,7 @@ class UsersCashCollectionNotifier extends StateNotifier<List<UsersModel>> {
     }
     final collection = UsersModel(
       name: cashCollections.first,
-      givenCashList: cashCollections.sublist(1).map((e) => e.asInt).toList(),
+      collectedCash: cashCollections.sublist(1).map((e) => e.asInt).toList(),
     );
     state = [...state, collection];
 

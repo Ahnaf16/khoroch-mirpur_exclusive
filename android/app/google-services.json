@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "614556418412",
+    "project_id": "khoroch-mirpur",
+    "storage_bucket": "khoroch-mirpur.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:614556418412:android:799c5675546870d3e33349",
+        "android_client_info": {
+          "package_name": "com.ahnaf.app.khoroch"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "614556418412-n6uo94iheh30s9if9p8q69m00gl83np6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDSnbVIN2wofF0vbc_URE-9mwP_dtTkbe4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "614556418412-n6uo94iheh30s9if9p8q69m00gl83np6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

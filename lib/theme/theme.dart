@@ -22,9 +22,10 @@ class AppTheme {
   }
 
   static final Color defContentColor = Colors.grey.shade600;
+  static final Color backgroundColor = Colors.grey.shade300;
 
   static ThemeData theme = ThemeData(
-    scaffoldBackgroundColor: Colors.grey.shade300,
+    scaffoldBackgroundColor: backgroundColor,
     iconTheme: IconThemeData(color: defContentColor),
     textTheme: textTheme(),
   );
