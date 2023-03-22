@@ -90,7 +90,7 @@ class _KhorochPageState extends ConsumerState<KhorochPage> {
           decoration: AppTheme.neuDecoration.copyWith(
             borderRadius: BorderRadius.circular(10),
           ),
-          child: const Icon(Icons.clear_all),
+          child: const Icon(Icons.add_rounded),
         ),
       ),
     );

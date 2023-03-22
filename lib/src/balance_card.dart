@@ -60,13 +60,13 @@ class BalanceCard extends ConsumerWidget {
                   Column(
                     children: [
                       Text(
-                        'TOTAL SPENT',
+                        'TOTAL EXPEND',
                         style: context.textTheme.titleMedium?.copyWith(
                           letterSpacing: 3,
                         ),
                       ),
                       Text(
-                        30000.toCurrency,
+                        30000.toCurrency, // todo
                         style: context.textTheme.titleLarge?.copyWith(
                           color: Colors.red.shade300,
                         ),

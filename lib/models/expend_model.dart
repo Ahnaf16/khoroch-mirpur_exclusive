@@ -1,14 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class SpendingModel {
-  SpendingModel({
+class ExpendModel {
+  ExpendModel({
     required this.item,
     required this.amount,
     required this.date,
   });
 
-  factory SpendingModel.fromDoc(DocumentSnapshot doc) {
-    return SpendingModel(
+  factory ExpendModel.fromDoc(DocumentSnapshot doc) {
+    return ExpendModel(
       amount: doc['amount'] ?? 0,
       item: doc['item'] ?? '',
       date: (doc['date'] as Timestamp).toDate(),
@@ -36,12 +36,12 @@ class SpendingModel {
     return result;
   }
 
-  SpendingModel copyWith({
+  ExpendModel copyWith({
     int? amount,
     String? item,
     DateTime? date,
   }) {
-    return SpendingModel(
+    return ExpendModel(
       amount: amount ?? this.amount,
       item: item ?? this.item,
       date: date ?? this.date,
