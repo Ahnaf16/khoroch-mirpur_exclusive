@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:khoroch/theme/theme.dart';
 
 extension ContextEx on BuildContext {
   MediaQueryData get mq => MediaQuery.of(this);
@@ -20,6 +21,28 @@ extension ContextEx on BuildContext {
   pushName(String route, {Object? arguments}) {
     return Navigator.pushNamed(this, route, arguments: arguments);
   }
+
+  showSnack(String content) => WidgetsBinding.instance.addPostFrameCallback(
+        (_) => showSnackContent(
+          Text(content, style: textTheme.bodyMedium),
+        ),
+      );
+
+  showSnackContent(
+    Widget content,
+  ) =>
+      ScaffoldMessenger.of(this).showSnackBar(
+        SnackBar(
+          content: content,
+          backgroundColor: AppTheme.backgroundColor,
+          elevation: 30,
+          behavior: SnackBarBehavior.floating,
+          clipBehavior: Clip.none,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+      );
 }
 
 extension StringEx on String {

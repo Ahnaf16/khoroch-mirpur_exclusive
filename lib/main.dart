@@ -2,7 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:khoroch/firebase_options.dart';
-import 'package:khoroch/src/khoroch.dart';
+import 'package:khoroch/src/khoroch_view.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:khoroch/theme/theme.dart';
 

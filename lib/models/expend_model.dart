@@ -47,4 +47,10 @@ class ExpendModel {
       date: date ?? this.date,
     );
   }
+
+  static ExpendModel empty = ExpendModel(
+    amount: 0,
+    item: '',
+    date: DateTime.now(),
+  );
 }

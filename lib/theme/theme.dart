@@ -5,7 +5,7 @@ class AppTheme {
   static BoxDecoration get neuDecoration {
     return BoxDecoration(
       color: Colors.grey.shade300,
-      borderRadius: BorderRadius.circular(20),
+      borderRadius: BorderRadius.circular(15),
       boxShadow: [
         BoxShadow(
           blurRadius: 15,
@@ -27,6 +27,12 @@ class AppTheme {
   static ThemeData theme = ThemeData(
     scaffoldBackgroundColor: backgroundColor,
     iconTheme: IconThemeData(color: defContentColor),
+    inputDecorationTheme: InputDecorationTheme(
+      contentPadding: const EdgeInsets.symmetric(horizontal: 20),
+      border: InputBorder.none,
+      labelStyle: textTheme().labelLarge,
+      prefixIconColor: Colors.grey.shade500,
+    ),
     textTheme: textTheme(),
   );
 
