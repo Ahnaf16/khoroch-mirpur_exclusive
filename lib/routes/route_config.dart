@@ -34,9 +34,9 @@ final routesProvider = Provider<RoutemasterDelegate>((ref) {
   final canNavigate = authState == AuthState.authenticated;
   log(canNavigate.toString());
 
-  Page<dynamic> splashGuard({required Page page}) {
-    return canNavigate ? page : const MaterialPage(child: SplashScreen());
-  }
+  // Page<dynamic> splashGuard({required Page page}) {
+  //   return canNavigate ? page : const MaterialPage(child: SplashScreen());
+  // }
 
   RouteMap routeMap() {
     if (authState == AuthState.unauthenticated) {
