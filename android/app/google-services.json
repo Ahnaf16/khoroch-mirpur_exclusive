@@ -14,7 +14,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "614556418412-n6uo94iheh30s9if9p8q69m00gl83np6.apps.googleusercontent.com",
+          "client_id": "614556418412-e1tkq4qiv3m60ecs8uc0jdvagnchfus0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ahnaf.app.khoroch",
+            "certificate_hash": "9bbb3186b2189ef16d8f272bdab59362c395cbb4"
+          }
+        },
+        {
+          "client_id": "614556418412-u6rosmosdfffbgeu4bthmpqrqho12nq2.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -29,6 +37,57 @@
             {
               "client_id": "614556418412-n6uo94iheh30s9if9p8q69m00gl83np6.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "614556418412-obtv87qmkm1vfkp3uic4npji7mj940ci.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.marj.kharac"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:614556418412:android:34358438abb9b4a7e33349",
+        "android_client_info": {
+          "package_name": "com.marj.kharac"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "614556418412-oqrui3n441gjd1p3a8ujv2ni43heb4i7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.marj.kharac",
+            "certificate_hash": "6629434b274e6c85b25098237761f0c4a1d65e80"
+          }
+        },
+        {
+          "client_id": "614556418412-u6rosmosdfffbgeu4bthmpqrqho12nq2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDSnbVIN2wofF0vbc_URE-9mwP_dtTkbe4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "614556418412-n6uo94iheh30s9if9p8q69m00gl83np6.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "614556418412-obtv87qmkm1vfkp3uic4npji7mj940ci.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.marj.kharac"
+              }
             }
           ]
         }
