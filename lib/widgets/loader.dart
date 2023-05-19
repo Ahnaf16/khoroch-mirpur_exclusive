@@ -40,45 +40,36 @@ class Loader extends StatelessWidget {
 }
 
 class OverlayLoader {
-  static OverlayEntry? _overlayEntry;
+  OverlayLoader(this.context);
+
+  final BuildContext context;
+
   static bool _onScreen = false;
+  static OverlayEntry? _overlayEntry;
 
   static bool isLoaderOn() => _onScreen;
 
-  static void show(BuildContext context, {String message = ''}) {
-    _show(context, message: message, type: SnackType.loading);
+  void show(String message) {
+    _show(message: message, type: SnackType.loading);
   }
 
   // ToDo
   // static void showToast(BuildContext context, {String message = ''}) {
   // }
 
-  static void showError(BuildContext context, {String message = ''}) {
-    _show(context, message: message, type: SnackType.error);
+  void showError(String error) {
+    _show(message: error, type: SnackType.error);
   }
 
-  static void showInfo(BuildContext context, {String message = ''}) {
-    _show(context, message: message, type: SnackType.info);
+  void showInfo(String message) {
+    _show(message: message, type: SnackType.info);
   }
 
-  static void showSuccess(BuildContext context, {String message = ''}) {
-    _show(context, message: message, type: SnackType.success);
+  void showSuccess(String message) {
+    _show(message: message, type: SnackType.success);
   }
 
-  static void _show(BuildContext context,
-      {String message = '', required SnackType type}) async {
-    FocusScope.of(context).requestFocus(FocusNode());
-
-    remove(context);
-
-    _overlayEntry = createOverlayEntry(context, message: message, type: type);
-    Overlay.of(context).insert(_overlayEntry!);
-    _onScreen = true;
-    await Future.delayed(const Duration(milliseconds: 3000));
-    remove(context);
-  }
-
-  static void remove(BuildContext context) {
+  void remove(BuildContext context) {
     if (_onScreen) {
       _overlayEntry!.remove();
       _onScreen = false;
@@ -86,10 +77,11 @@ class OverlayLoader {
   }
 
   // Loader can be changed from here
-  static OverlayEntry createOverlayEntry(BuildContext context,
-      {String message = '',
-      Alignment alignment = Alignment.center,
-      required SnackType type}) {
+  OverlayEntry createOverlayEntry({
+    String message = '',
+    Alignment alignment = Alignment.center,
+    required SnackType type,
+  }) {
     return OverlayEntry(
       builder: (context) => Align(
         alignment: alignment,
@@ -100,34 +92,7 @@ class OverlayLoader {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              if (type == SnackType.loading)
-                Center(
-                  child: CircularProgressIndicator(
-                    backgroundColor: AppTheme.backgroundColor,
-                    color: AppTheme.defContentColor,
-                  ),
-                )
-              else if (type == SnackType.info)
-                Center(
-                  child: Icon(
-                    Icons.info_outline_rounded,
-                    color: AppTheme.defContentColor,
-                  ),
-                )
-              else if (type == SnackType.error)
-                Center(
-                  child: Icon(
-                    Icons.error_outline,
-                    color: AppTheme.defContentColor,
-                  ),
-                )
-              else
-                Center(
-                  child: Icon(
-                    Icons.check_rounded,
-                    color: AppTheme.defContentColor,
-                  ),
-                ),
+              type.widget,
               const SizedBox(height: 15),
               Text(
                 message,
@@ -140,5 +105,21 @@ class OverlayLoader {
         ),
       ),
     );
+  }
+
+  void _show({String message = '', required SnackType type}) async {
+    FocusScope.of(context).requestFocus(FocusNode());
+
+    remove(context);
+
+    _overlayEntry = createOverlayEntry(message: message, type: type);
+
+    Overlay.of(context).insert(_overlayEntry!);
+
+    _onScreen = true;
+
+    await Future.delayed(const Duration(milliseconds: 3000));
+
+    remove(context);
   }
 }

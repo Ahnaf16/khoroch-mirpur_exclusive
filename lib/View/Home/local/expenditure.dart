@@ -6,7 +6,7 @@ import 'package:khoroch/core/extensions.dart';
 import 'package:khoroch/services/services.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
-import '../../theme/theme.dart';
+import '../../../theme/theme.dart';
 
 class AddExpanseSheet extends ConsumerWidget {
   const AddExpanseSheet({super.key});

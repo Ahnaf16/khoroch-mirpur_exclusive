@@ -43,6 +43,8 @@ class ExpenditureNotifier extends StateNotifier<ExpandState> {
 
   final _fire = FirebaseFirestore.instance;
 
+  OverlayLoader _loader(BuildContext context) => OverlayLoader(context);
+
   addNew(BuildContext context) async {
     applyCtrls();
     if (!isValid(context)) {
@@ -50,17 +52,17 @@ class ExpenditureNotifier extends StateNotifier<ExpandState> {
     }
 
     try {
-      OverlayLoader.show(context, message: 'Please Wait');
+      _loader(context).show('Please Wait');
       final doc =
           _coll().doc(state.expend.date.millisecondsSinceEpoch.toString());
 
       await doc.set(state.expend.toMap());
 
       context.pop;
-      OverlayLoader.showSuccess(context, message: 'Expanse Added !!');
+      _loader(context).showSuccess('Expanse Added !!');
     } on FirebaseException catch (e) {
       context.pop;
-      OverlayLoader.showError(context, message: 'Error : ${e.message}');
+      _loader(context).showError('Error : ${e.message}');
     }
     amountCtrl.clear();
     itemCtrl.clear();
@@ -68,7 +70,7 @@ class ExpenditureNotifier extends StateNotifier<ExpandState> {
 
   bool isValid(BuildContext context) {
     if (state.expend.amount < 1) {
-      OverlayLoader.showError(context, message: 'Enter Amount');
+      _loader(context).showError('Enter Amount');
       return false;
     }
 

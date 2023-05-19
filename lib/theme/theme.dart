@@ -23,6 +23,8 @@ class AppTheme {
 
   static final Color defContentColor = Colors.grey.shade600;
   static final Color backgroundColor = Colors.grey.shade300;
+  static final Color successColor = Colors.green.shade300;
+  static final Color errorColor = Colors.red.shade300;
 
   static ThemeData theme = ThemeData(
     scaffoldBackgroundColor: backgroundColor,
@@ -32,6 +34,11 @@ class AppTheme {
       border: InputBorder.none,
       labelStyle: textTheme().labelLarge,
       prefixIconColor: Colors.grey.shade500,
+    ),
+    progressIndicatorTheme: ProgressIndicatorThemeData(
+      color: defContentColor,
+      linearTrackColor: backgroundColor,
+      circularTrackColor: backgroundColor,
     ),
     textTheme: textTheme(),
   );
