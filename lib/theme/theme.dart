@@ -28,6 +28,12 @@ class AppTheme {
 
   static ThemeData theme = ThemeData(
     scaffoldBackgroundColor: backgroundColor,
+    appBarTheme: AppBarTheme(
+      titleTextStyle: textTheme().titleMedium?.copyWith(letterSpacing: 3),
+      centerTitle: true,
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+    ),
     iconTheme: IconThemeData(color: defContentColor),
     inputDecorationTheme: InputDecorationTheme(
       contentPadding: const EdgeInsets.symmetric(horizontal: 20),
@@ -39,6 +45,17 @@ class AppTheme {
       color: defContentColor,
       linearTrackColor: backgroundColor,
       circularTrackColor: backgroundColor,
+    ),
+    bottomSheetTheme: BottomSheetThemeData(
+      showDragHandle: true,
+      modalBarrierColor: Colors.grey.withOpacity(.8),
+      elevation: 30,
+      backgroundColor: AppTheme.backgroundColor,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(20),
+        ),
+      ),
     ),
     textTheme: textTheme(),
   );

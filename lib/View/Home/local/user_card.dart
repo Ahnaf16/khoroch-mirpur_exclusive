@@ -4,8 +4,8 @@ import 'package:khoroch/models/users_model.dart';
 import 'package:khoroch/theme/theme.dart';
 import 'package:khoroch/widgets/cached_img.dart';
 
-class PersonCashCard extends StatelessWidget {
-  const PersonCashCard({
+class UserCard extends StatelessWidget {
+  const UserCard({
     super.key,
     required this.user,
   });

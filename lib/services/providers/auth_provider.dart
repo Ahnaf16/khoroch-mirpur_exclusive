@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:khoroch/services/services.dart';
 
+User? get getUser => FirebaseAuth.instance.currentUser;
+
 final authStateChangeProvider = StreamProvider<User?>((ref) {
   return FirebaseAuth.instance.authStateChanges();
 });

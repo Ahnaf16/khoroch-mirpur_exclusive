@@ -1,20 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:khoroch/models/enums.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+
 import 'package:khoroch/core/const/quick_items.dart';
 import 'package:khoroch/core/extensions.dart';
+import 'package:khoroch/models/models.dart';
 import 'package:khoroch/services/services.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 import '../../../theme/theme.dart';
 
 class AddExpanseSheet extends ConsumerWidget {
-  const AddExpanseSheet({super.key});
+  const AddExpanseSheet({
+    super.key,
+    required this.intend,
+    this.updatingExpense,
+  });
+
+  /// null when updating
+  final Intend intend;
+  final ExpenseModel? updatingExpense;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final expendCtrl = ref.read(expenditureCtrl.notifier);
-    final expend = ref.watch(expenditureCtrl);
+    final expenseCtrl = ref.read(expenditureCtrl(updatingExpense).notifier);
+    final expense = ref.watch(expenditureCtrl(updatingExpense));
     return Padding(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -28,7 +39,7 @@ class AddExpanseSheet extends ConsumerWidget {
                   child: ClipRRect(
                     borderRadius: AppTheme.neuDecoration.borderRadius,
                     child: TextField(
-                      controller: expendCtrl.amountCtrl,
+                      controller: expenseCtrl.amountCtrl,
                       inputFormatters: [
                         FilteringTextInputFormatter.digitsOnly,
                       ],
@@ -44,35 +55,35 @@ class AddExpanseSheet extends ConsumerWidget {
               ),
               const SizedBox(width: 10),
               GestureDetector(
-                onTap: () => expendCtrl.toggleOperator(true),
+                onTap: () => expenseCtrl.toggleOperator(true),
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 300),
                   height: 48,
                   width: 48,
                   decoration: AppTheme.neuDecoration.copyWith(
                     borderRadius: BorderRadius.circular(10),
-                    color: expend.isAdd ? AppTheme.defContentColor : null,
+                    color: expense.isAdd ? AppTheme.defContentColor : null,
                   ),
                   child: Icon(
                     Icons.add_rounded,
-                    color: expend.isAdd ? AppTheme.backgroundColor : null,
+                    color: expense.isAdd ? AppTheme.backgroundColor : null,
                   ),
                 ),
               ),
               const SizedBox(width: 10),
               GestureDetector(
-                onTap: () => expendCtrl.toggleOperator(false),
+                onTap: () => expenseCtrl.toggleOperator(false),
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 300),
                   height: 48,
                   width: 48,
                   decoration: AppTheme.neuDecoration.copyWith(
                     borderRadius: BorderRadius.circular(10),
-                    color: !expend.isAdd ? AppTheme.defContentColor : null,
+                    color: !expense.isAdd ? AppTheme.defContentColor : null,
                   ),
                   child: Icon(
                     Icons.remove_rounded,
-                    color: !expend.isAdd ? AppTheme.backgroundColor : null,
+                    color: !expense.isAdd ? AppTheme.backgroundColor : null,
                   ),
                 ),
               ),
@@ -87,7 +98,7 @@ class AddExpanseSheet extends ConsumerWidget {
               ...QuickItems.amount.map(
                 (e) => GestureDetector(
                   onTap: () {
-                    expendCtrl.setQuickAmount(e);
+                    expenseCtrl.setQuickAmount(e);
                   },
                   child: Container(
                     padding: const EdgeInsets.symmetric(
@@ -95,7 +106,7 @@ class AddExpanseSheet extends ConsumerWidget {
                     decoration: AppTheme.neuDecoration.copyWith(
                       borderRadius: BorderRadius.circular(5),
                     ),
-                    child: Text((expend.isAdd ? '+ ' : '- ') + e.toCurrency),
+                    child: Text((expense.isAdd ? '+ ' : '- ') + e.toCurrency),
                   ),
                 ),
               ),
@@ -107,7 +118,7 @@ class AddExpanseSheet extends ConsumerWidget {
             child: ClipRRect(
               borderRadius: AppTheme.neuDecoration.borderRadius,
               child: TextField(
-                controller: expendCtrl.itemCtrl,
+                controller: expenseCtrl.itemCtrl,
                 cursorColor: Colors.grey.shade500,
                 decoration: const InputDecoration(
                   labelText: 'Spend on',
@@ -125,7 +136,7 @@ class AddExpanseSheet extends ConsumerWidget {
               ...QuickItems.items.map(
                 (e) => GestureDetector(
                   onTap: () {
-                    expendCtrl.setQuickItem(e);
+                    expenseCtrl.setQuickItem(e);
                   },
                   child: Container(
                     padding: const EdgeInsets.symmetric(
@@ -141,7 +152,7 @@ class AddExpanseSheet extends ConsumerWidget {
           ),
           const SizedBox(height: 20),
           GestureDetector(
-            onTap: () => expendCtrl.addNew(context),
+            onTap: () => expenseCtrl.addNew(context, intend),
             child: Container(
               height: 50,
               width: double.maxFinite,
@@ -150,7 +161,7 @@ class AddExpanseSheet extends ConsumerWidget {
               decoration: AppTheme.neuDecoration.copyWith(
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: const Text('A D D'),
+              child: Text(intend.name),
             ),
           ),
         ],

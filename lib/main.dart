@@ -10,6 +10,7 @@ import 'package:routemaster/routemaster.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  Routemaster.setPathUrlStrategy();
   runApp(const ProviderScope(child: MyApp()));
 }
 

@@ -25,3 +25,15 @@ enum SnackType {
     );
   }
 }
+
+enum Intend {
+  add,
+  approval,
+  request;
+
+  String get name => switch (this) {
+        Intend.add => 'A D D',
+        Intend.approval => 'Approve',
+        Intend.request => 'Request',
+      };
+}

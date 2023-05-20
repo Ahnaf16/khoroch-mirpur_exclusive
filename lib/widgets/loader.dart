@@ -8,10 +8,14 @@ import 'package:khoroch/widgets/widgets.dart';
 class Loader extends StatelessWidget {
   const Loader({
     super.key,
-    required this.isList,
+    this.isList = false,
+    this.height,
+    this.width,
   });
 
   final bool isList;
+  final double? height;
+  final double? width;
 
   @override
   Widget build(BuildContext context) {
@@ -23,16 +27,16 @@ class Loader extends StatelessWidget {
               ...List.generate(
                 5,
                 (index) => KShimmer.card(
-                  height: 50,
-                  width: double.maxFinite,
+                  height: height ?? 50,
+                  width: width ?? double.maxFinite,
                 ),
               )
             ],
           )
         else
           KShimmer.card(
-            height: 150,
-            width: double.maxFinite,
+            height: height ?? 150,
+            width: width ?? double.maxFinite,
           ),
       ],
     );

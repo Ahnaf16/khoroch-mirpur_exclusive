@@ -4,7 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:khoroch/core/const/firebase_const.dart';
 import 'package:khoroch/core/extensions.dart';
+import 'package:khoroch/models/enums.dart';
 import 'package:khoroch/models/models.dart';
+import 'package:khoroch/services/services.dart';
 import 'package:khoroch/widgets/widgets.dart';
 
 class ExpandState {
@@ -13,11 +15,14 @@ class ExpandState {
     required this.isAdd,
   });
 
-  final ExpendModel expend;
+  static ExpandState empty =
+      ExpandState(expend: ExpenseModel.empty, isAdd: true);
+
+  final ExpenseModel expend;
   final bool isAdd;
 
   ExpandState copyWith({
-    ExpendModel? expend,
+    ExpenseModel? expend,
     bool? isAdd,
   }) {
     return ExpandState(
@@ -25,28 +30,50 @@ class ExpandState {
       isAdd: isAdd ?? this.isAdd,
     );
   }
-
-  static ExpandState empty =
-      ExpandState(expend: ExpendModel.empty, isAdd: true);
 }
 
-final expenditureCtrl =
-    StateNotifierProvider<ExpenditureNotifier, ExpandState>((ref) {
-  return ExpenditureNotifier();
+final expenditureCtrl = StateNotifierProvider.family<ExpenditureNotifier,
+    ExpandState, ExpenseModel?>((ref, updatingExpense) {
+  return ExpenditureNotifier(updatingExpense);
 });
 
 class ExpenditureNotifier extends StateNotifier<ExpandState> {
-  ExpenditureNotifier() : super(ExpandState.empty);
-
+  ExpenditureNotifier(ExpenseModel? updatingExpense)
+      : super(ExpandState.empty.copyWith(expend: updatingExpense)) {
+    init(updatingExpense);
+  }
   final amountCtrl = TextEditingController();
   final itemCtrl = TextEditingController();
 
   final _fire = FirebaseFirestore.instance;
+  final uid = getUser?.uid;
+  init(ExpenseModel? updatingExpense) {
+    if (updatingExpense != null) {
+      amountCtrl.text = updatingExpense.amount.toString();
+      itemCtrl.text = updatingExpense.item;
+    }
+  }
 
-  OverlayLoader _loader(BuildContext context) => OverlayLoader(context);
-
-  addNew(BuildContext context) async {
+  addNew(BuildContext context, Intend intend) async {
     applyCtrls();
+
+    final status = switch (intend) {
+      Intend.add => ExpenseStatus.approved,
+      Intend.approval => ExpenseStatus.approved,
+      Intend.request => ExpenseStatus.pending,
+    };
+
+    final snap = await _fire.collection(FirePath.users).get();
+
+    final user = snap.docs
+        .map((e) => UsersModel.fromDoc(e))
+        .where((element) => element.uid == uid)
+        .firstOrNull;
+
+    state = state.copyWith(
+      expend: state.expend.copyWith(status: status, addedBy: user),
+    );
+
     if (!isValid(context)) {
       return 0;
     }
@@ -56,7 +83,11 @@ class ExpenditureNotifier extends StateNotifier<ExpandState> {
       final doc =
           _coll().doc(state.expend.date.millisecondsSinceEpoch.toString());
 
-      await doc.set(state.expend.toMap());
+      if (intend == Intend.approval) {
+        await doc.update(state.expend.toMap());
+      } else {
+        await doc.set(state.expend.toMap());
+      }
 
       context.pop;
       _loader(context).showSuccess('Expanse Added !!');
@@ -70,7 +101,16 @@ class ExpenditureNotifier extends StateNotifier<ExpandState> {
 
   bool isValid(BuildContext context) {
     if (state.expend.amount < 1) {
-      _loader(context).showError('Enter Amount');
+      _loader(context).showError('Amount can not be 0');
+      return false;
+    }
+
+    if (state.expend.item.isEmpty) {
+      _loader(context).showError('Spend on ?');
+      return false;
+    }
+    if (state.expend.addedBy == null) {
+      _loader(context).showError('Something went wrong !!');
       return false;
     }
 
@@ -78,9 +118,6 @@ class ExpenditureNotifier extends StateNotifier<ExpandState> {
   }
 
   applyCtrls() {
-    if (state.expend.item.isEmpty) {
-      setQuickItem('Other');
-    }
     state = state.copyWith(
       expend: state.expend.copyWith(
         amount: amountCtrl.text.asInt,
@@ -88,6 +125,9 @@ class ExpenditureNotifier extends StateNotifier<ExpandState> {
         date: DateTime.now(),
       ),
     );
+    if (state.expend.item.isEmpty) {
+      setQuickItem('Other');
+    }
   }
 
   setQuickItem(String item) {
@@ -109,6 +149,8 @@ class ExpenditureNotifier extends StateNotifier<ExpandState> {
     };
     amountCtrl.text = newAmount.toString();
   }
+
+  OverlayLoader _loader(BuildContext context) => OverlayLoader(context);
 
   CollectionReference _coll() => _fire.collection(FirePath.expend);
 }
