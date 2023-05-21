@@ -28,6 +28,7 @@ class HomePage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final expendData = ref.watch(expenditureProvider);
     final userData = ref.watch(userProvider);
+    final authCtrl = ref.read(authCtrlProvider.notifier);
 
     final img = getUser?.photoURL;
     return SafeArea(
@@ -37,16 +38,39 @@ class HomePage extends ConsumerWidget {
           title: 'KHARAC',
           actions: [
             if (img != null)
-              Container(
-                clipBehavior: Clip.none,
-                decoration: AppTheme.neuDecoration.copyWith(
-                  borderRadius: BorderRadius.circular(100),
-                  image: DecorationImage(image: KCachedImg(url: img).provider),
-                ),
-                height: 50,
-                width: 50,
+              Builder(
+                builder: (context) {
+                  return GestureDetector(
+                    onTap: () => Scaffold.of(context).openDrawer(),
+                    child: Container(
+                      clipBehavior: Clip.none,
+                      decoration: AppTheme.neuDecoration.copyWith(
+                        borderRadius: BorderRadius.circular(100),
+                        image: DecorationImage(
+                            image: KCachedImg(url: img).provider),
+                      ),
+                      height: 50,
+                      width: 50,
+                    ),
+                  );
+                },
               ),
           ],
+        ),
+        drawer: Container(
+          decoration: AppTheme.neuDecoration,
+          width: context.width / 1.5,
+          child: ListView(
+            children: [
+              TextButton.icon(
+                onPressed: () {
+                  authCtrl.logOut();
+                },
+                icon: const Icon(Icons.logout_rounded),
+                label: const Text('LOGOUT'),
+              ),
+            ],
+          ),
         ),
         body: expendData.when(
           error: (error, stackTrace) {

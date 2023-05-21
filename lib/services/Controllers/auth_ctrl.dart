@@ -31,4 +31,8 @@ class AuthStateNotifier extends StateNotifier<AuthState> {
       _loader(context).showSuccess('Login Success');
     });
   }
+
+  logOut() async {
+    await _repo.logOut();
+  }
 }

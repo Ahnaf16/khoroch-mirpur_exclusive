@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -47,6 +49,7 @@ class ExpenditureNotifier extends StateNotifier<ExpandState> {
 
   final _fire = FirebaseFirestore.instance;
   final uid = getUser?.uid;
+
   init(ExpenseModel? updatingExpense) {
     if (updatingExpense != null) {
       amountCtrl.text = updatingExpense.amount.toString();
@@ -63,12 +66,9 @@ class ExpenditureNotifier extends StateNotifier<ExpandState> {
       Intend.request => ExpenseStatus.pending,
     };
 
-    final snap = await _fire.collection(FirePath.users).get();
+    final snap = await _fire.collection(FirePath.users).doc(uid).get();
 
-    final user = snap.docs
-        .map((e) => UsersModel.fromDoc(e))
-        .where((element) => element.uid == uid)
-        .firstOrNull;
+    final user = UsersModel.fromDoc(snap);
 
     state = state.copyWith(
       expend: state.expend.copyWith(status: status, addedBy: user),
@@ -97,6 +97,16 @@ class ExpenditureNotifier extends StateNotifier<ExpandState> {
     }
     amountCtrl.clear();
     itemCtrl.clear();
+  }
+
+  rejected() async {
+    state = state.copyWith(
+      expend: state.expend.copyWith(status: ExpenseStatus.rejected),
+    );
+    final doc =
+        _coll().doc(state.expend.date.millisecondsSinceEpoch.toString());
+
+    await doc.update(state.expend.toMap());
   }
 
   bool isValid(BuildContext context) {

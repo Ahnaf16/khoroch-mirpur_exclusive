@@ -26,6 +26,7 @@ class KAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
         alignment: Alignment.center,
         child: AppBar(
+          automaticallyImplyLeading: false,
           clipBehavior: Clip.none,
           title: Text(title),
           actions: actions,

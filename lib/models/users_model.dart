@@ -14,6 +14,7 @@ class UsersModel {
     required this.photo,
     required this.uid,
     required this.role,
+    required this.email,
   }) : total = collectedCash.fold(0, (previous, element) => previous + element);
 
   factory UsersModel.fromDoc(DocumentSnapshot doc) {
@@ -23,6 +24,7 @@ class UsersModel {
       photo: doc['photo'],
       uid: doc['uid'] ?? '',
       role: Role.fromMap(doc['role']),
+      email: doc['email'] ?? '',
     );
   }
 
@@ -33,6 +35,7 @@ class UsersModel {
       photo: map['photo'],
       uid: map['uid'] ?? '',
       role: Role.fromMap(map['role']),
+      email: map['email'] ?? '',
     );
   }
 
@@ -42,6 +45,7 @@ class UsersModel {
   final Role role;
   final int total;
   final String uid;
+  final String email;
 
   bool get canAdd => role == Role.owner;
 
@@ -53,6 +57,7 @@ class UsersModel {
     result.addAll({'photo': photo});
     result.addAll({'uid': uid});
     result.addAll({'role': role.name});
+    result.addAll({'email': email});
 
     return result;
   }
@@ -62,6 +67,7 @@ class UsersModel {
     String? name,
     String? photo,
     String? uid,
+    String? email,
     Role? role,
   }) {
     return UsersModel(
@@ -70,6 +76,7 @@ class UsersModel {
       photo: photo ?? this.photo,
       uid: uid ?? this.uid,
       role: role ?? this.role,
+      email: email ?? this.email,
     );
   }
 }

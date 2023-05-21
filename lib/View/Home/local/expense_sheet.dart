@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:khoroch/models/enums.dart';
+import 'package:khoroch/widgets/widgets.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 import 'package:khoroch/core/const/quick_items.dart';
@@ -151,18 +152,23 @@ class AddExpanseSheet extends ConsumerWidget {
             ],
           ),
           const SizedBox(height: 20),
-          GestureDetector(
-            onTap: () => expenseCtrl.addNew(context, intend),
-            child: Container(
-              height: 50,
-              width: double.maxFinite,
-              alignment: Alignment.center,
-              margin: const EdgeInsets.all(20),
-              decoration: AppTheme.neuDecoration.copyWith(
-                borderRadius: BorderRadius.circular(10),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (intend == Intend.approval)
+                NeuButton(
+                  onTap: () => expenseCtrl.rejected(),
+                  width: context.width / 2.5,
+                  child: const Icon(Icons.close),
+                ),
+              if (intend == Intend.approval) const SizedBox(width: 20),
+              NeuButton(
+                onTap: () => expenseCtrl.addNew(context, intend),
+                height: 50,
+                width: context.width / 2.5,
+                child: Text(intend.name),
               ),
-              child: Text(intend.name),
-            ),
+            ],
           ),
         ],
       ),

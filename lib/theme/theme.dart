@@ -28,6 +28,7 @@ class AppTheme {
 
   static ThemeData theme = ThemeData(
     scaffoldBackgroundColor: backgroundColor,
+    primaryColor: defContentColor,
     appBarTheme: AppBarTheme(
       titleTextStyle: textTheme().titleMedium?.copyWith(letterSpacing: 3),
       centerTitle: true,
@@ -55,6 +56,12 @@ class AppTheme {
         borderRadius: BorderRadius.vertical(
           top: Radius.circular(20),
         ),
+      ),
+    ),
+    textButtonTheme: TextButtonThemeData(
+      style: ButtonStyle(
+        foregroundColor:
+            MaterialStateColor.resolveWith((states) => defContentColor),
       ),
     ),
     textTheme: textTheme(),

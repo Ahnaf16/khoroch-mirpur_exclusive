@@ -35,7 +35,20 @@ class UserCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 10),
-              Text(user.name, style: context.textTheme.bodyLarge),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    user.name.split(' ').first,
+                    style: context.textTheme.bodyLarge,
+                  ),
+                  if (user.canAdd)
+                    const Icon(
+                      Icons.verified_outlined,
+                      size: 18,
+                    ),
+                ],
+              ),
               // const SizedBox(height: 10),
               Text(user.total.toCurrency, style: context.textTheme.titleLarge),
             ],

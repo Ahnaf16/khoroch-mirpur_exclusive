@@ -21,6 +21,7 @@ class BalanceCard extends ConsumerWidget {
       loading: () => const Loader(isList: false),
       data: (users) {
         final totalBal = users.map((e) => e.total).sum;
+        users.sort((a, b) => a.total > b.total ? 1 : 0);
         return Container(
           padding: const EdgeInsets.all(10),
           margin: const EdgeInsets.all(20),

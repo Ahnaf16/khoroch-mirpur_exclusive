@@ -65,38 +65,42 @@ class ExpenditureList extends ConsumerWidget {
                       style: context.textTheme.labelLarge,
                       textAlign: TextAlign.end,
                     ),
-                    if (expense.status != ExpenseStatus.approved)
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10),
-                        child: IconButton(
-                          onPressed: !canAdd
-                              ? null
-                              : () {
-                                  showModalBottomSheet(
-                                    context: context,
-                                    isScrollControlled: true,
-                                    builder: (context) => AddExpanseSheet(
-                                      intend: Intend.approval,
-                                      updatingExpense: expense,
-                                    ),
-                                  );
-                                },
-                          icon: Icon(expense.status.icon),
-                        ),
-                      ),
                     const SizedBox(width: 10),
-                    Container(
-                      clipBehavior: Clip.none,
-                      decoration: AppTheme.neuDecoration.copyWith(
-                        borderRadius: BorderRadius.circular(100),
-                        image: DecorationImage(
-                          image: KCachedImg(
-                            url: expense.addedBy!.photo,
-                          ).provider,
+                    Column(
+                      children: [
+                        Container(
+                          clipBehavior: Clip.none,
+                          decoration: AppTheme.neuDecoration.copyWith(
+                            borderRadius: BorderRadius.circular(100),
+                            image: DecorationImage(
+                              image: KCachedImg(
+                                url: expense.addedBy!.photo,
+                              ).provider,
+                            ),
+                          ),
+                          height: 20,
+                          width: 20,
                         ),
-                      ),
-                      height: 20,
-                      width: 20,
+                        if (expense.status != ExpenseStatus.approved)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 5),
+                            child: InkWell(
+                              onTap: !canAdd
+                                  ? null
+                                  : () {
+                                      showModalBottomSheet(
+                                        context: context,
+                                        isScrollControlled: true,
+                                        builder: (context) => AddExpanseSheet(
+                                          intend: Intend.approval,
+                                          updatingExpense: expense,
+                                        ),
+                                      );
+                                    },
+                              child: Icon(expense.status.icon),
+                            ),
+                          ),
+                      ],
                     ),
                   ],
                 ),

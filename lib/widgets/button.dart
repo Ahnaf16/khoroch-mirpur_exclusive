@@ -5,8 +5,10 @@ class NeuButton extends StatelessWidget {
   const NeuButton({
     super.key,
     required this.onTap,
-    required this.showLoading,
+    this.showLoading = false,
     required this.child,
+    this.height,
+    this.width,
   });
 
   NeuButton.social({
@@ -15,6 +17,8 @@ class NeuButton extends StatelessWidget {
     required this.showLoading,
     required IconData icon,
     required String socialName,
+    this.height,
+    this.width,
   }) : child = Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -30,6 +34,8 @@ class NeuButton extends StatelessWidget {
   final Function()? onTap;
   final bool showLoading;
   final Widget child;
+  final double? height;
+  final double? width;
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +46,9 @@ class NeuButton extends StatelessWidget {
           child: Container(
             clipBehavior: Clip.none,
             decoration: AppTheme.neuDecoration,
-            height: 50,
+            alignment: Alignment.center,
+            height: height ?? 50,
+            width: width,
             child: child,
           ),
         ),
