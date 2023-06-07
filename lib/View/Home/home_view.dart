@@ -27,7 +27,7 @@ class HomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final expendData = ref.watch(expenditureProvider);
-    final userData = ref.watch(userProvider);
+    final userData = ref.watch(currentUserProvider);
     final authCtrl = ref.read(authCtrlProvider.notifier);
 
     final img = getUser?.photoURL;

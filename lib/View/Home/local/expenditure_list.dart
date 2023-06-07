@@ -19,7 +19,7 @@ class ExpenditureList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userData = ref.watch(userProvider);
+    final userData = ref.watch(currentUserProvider);
 
     return userData.when(
         error: (error, stackTrace) => const Center(child: Text('E R R O R')),

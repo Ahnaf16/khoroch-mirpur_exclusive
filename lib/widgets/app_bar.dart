@@ -18,6 +18,7 @@ class KAppBar extends StatelessWidget implements PreferredSizeWidget {
     return PreferredSize(
       preferredSize: const Size.fromHeight(85),
       child: Container(
+        clipBehavior: Clip.none,
         height: 100,
         padding: const EdgeInsets.all(10),
         margin: const EdgeInsets.fromLTRB(20, 20, 20, 10),

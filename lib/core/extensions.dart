@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:khoroch/theme/theme.dart';
+import 'package:routemaster/routemaster.dart';
 
 extension ContextEx on BuildContext {
   MediaQueryData get mq => MediaQuery.of(this);
@@ -18,8 +19,11 @@ extension ContextEx on BuildContext {
   bool get isLight => getBright == Brightness.light;
 
   void get pop => Navigator.pop(this);
-  pushName(String route, {Object? arguments}) {
-    return Navigator.pushNamed(this, route, arguments: arguments);
+
+  void get rPop => Routemaster.of(this).pop();
+
+  NavigationResult pushTo(String route, {Map<String, String>? quarry}) {
+    return Routemaster.of(this).push(route, queryParameters: quarry);
   }
 
   showSnack(String content) => WidgetsBinding.instance.addPostFrameCallback(

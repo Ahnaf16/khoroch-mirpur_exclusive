@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:khoroch/View/Auth/login.dart';
 import 'package:khoroch/View/Home/home_view.dart';
+import 'package:khoroch/View/user/user_view.dart';
 import 'package:khoroch/routes/pages/splash.dart';
 import 'package:khoroch/services/services.dart';
 import 'package:routemaster/routemaster.dart';
@@ -12,15 +13,11 @@ class RouteName {
   static const String root = '/';
   static const String login = '/login';
   static const String home = '/home';
+  static String user(uid) => '/home/$uid';
   static const String splash = '/splash';
 }
 
 class RouteLogObserver extends RoutemasterObserver {
-  @override
-  void didPop(Route route, Route? previousRoute) {
-    log('Popped a route', name: 'route');
-  }
-
   @override
   void didChangeRoute(RouteData routeData, Page page) {
     log('New route: ${routeData.path}', name: 'route');
@@ -63,6 +60,15 @@ final routesProvider = Provider<RoutemasterDelegate>((ref) {
               splashGuard(page: const MaterialPage(child: LoginPage())),
           RouteName.home: (route) =>
               splashGuard(page: const MaterialPage(child: HomePage())),
+          RouteName.user(':uid'): (route) {
+            final uid = route.pathParameters['uid'];
+            return splashGuard(
+              page: MaterialPage(
+                fullscreenDialog: true,
+                child: UserDetails(uid: uid ?? ''),
+              ),
+            );
+          },
         },
       );
     }

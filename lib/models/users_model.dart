@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:collection/collection.dart';
 
 enum Role {
   owner,
@@ -15,11 +18,12 @@ class UsersModel {
     required this.uid,
     required this.role,
     required this.email,
-  }) : total = collectedCash.fold(0, (previous, element) => previous + element);
+  }) : total = collectedCash.map((e) => e.amount).sum;
 
   factory UsersModel.fromDoc(DocumentSnapshot doc) {
     return UsersModel(
-      collectedCash: List<int>.from(doc['collectedCash']),
+      collectedCash: List<CashCollection>.from(
+          doc['collectedCash']?.map((x) => CashCollection.fromMap(x))),
       name: doc['name'] ?? '',
       photo: doc['photo'],
       uid: doc['uid'] ?? '',
@@ -28,42 +32,47 @@ class UsersModel {
     );
   }
 
+  factory UsersModel.fromJson(String source) =>
+      UsersModel.fromMap(json.decode(source));
+
   factory UsersModel.fromMap(Map<String, dynamic> map) {
     return UsersModel(
-      collectedCash: List<int>.from(map['collectedCash']),
-      name: map['name'] ?? '',
-      photo: map['photo'],
-      uid: map['uid'] ?? '',
-      role: Role.fromMap(map['role']),
+      collectedCash: List<CashCollection>.from(
+          map['collectedCash']?.map((x) => CashCollection.fromMap(x))),
       email: map['email'] ?? '',
+      name: map['name'] ?? '',
+      photo: map['photo'] ?? '',
+      role: Role.fromMap(map['role']),
+      uid: map['uid'] ?? '',
     );
   }
 
-  final List<int> collectedCash;
+  final List<CashCollection> collectedCash;
+  final String email;
   final String name;
   final String photo;
   final Role role;
   final int total;
   final String uid;
-  final String email;
 
   bool get canAdd => role == Role.owner;
 
   Map<String, dynamic> toMap() {
     final result = <String, dynamic>{};
 
-    result.addAll({'collectedCash': collectedCash});
+    result.addAll(
+        {'collectedCash': collectedCash.map((x) => x.toMap()).toList()});
+    result.addAll({'email': email});
     result.addAll({'name': name});
     result.addAll({'photo': photo});
+    result.addAll({'total': total});
     result.addAll({'uid': uid});
-    result.addAll({'role': role.name});
-    result.addAll({'email': email});
 
     return result;
   }
 
   UsersModel copyWith({
-    List<int>? collectedCash,
+    List<CashCollection>? collectedCash,
     String? name,
     String? photo,
     String? uid,
@@ -78,5 +87,43 @@ class UsersModel {
       role: role ?? this.role,
       email: email ?? this.email,
     );
+  }
+
+  String toJson() => json.encode(toMap());
+}
+
+class CashCollection {
+  CashCollection({
+    required this.amount,
+    required this.date,
+  });
+
+  factory CashCollection.fromMap(Map<String, dynamic> map) {
+    return CashCollection(
+      amount: map['amount']?.toInt() ?? 0,
+      date: (map['date'] as Timestamp).toDate(),
+    );
+  }
+
+  final int amount;
+  final DateTime date;
+
+  CashCollection copyWith({
+    int? amount,
+    DateTime? date,
+  }) {
+    return CashCollection(
+      amount: amount ?? this.amount,
+      date: date ?? this.date,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    final result = <String, dynamic>{};
+
+    result.addAll({'amount': amount});
+    result.addAll({'date': date.millisecondsSinceEpoch});
+
+    return result;
   }
 }

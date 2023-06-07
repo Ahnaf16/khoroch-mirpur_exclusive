@@ -33,6 +33,7 @@ class AppTheme {
       titleTextStyle: textTheme().titleMedium?.copyWith(letterSpacing: 3),
       centerTitle: true,
       backgroundColor: Colors.transparent,
+      iconTheme: IconThemeData(color: defContentColor),
       elevation: 0,
     ),
     iconTheme: IconThemeData(color: defContentColor),

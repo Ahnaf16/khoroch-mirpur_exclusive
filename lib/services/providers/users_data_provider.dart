@@ -13,9 +13,20 @@ final userListProvider = StreamProvider<List<UsersModel>>((ref) async* {
   yield* users;
 });
 
-final userProvider = StreamProvider.autoDispose<UsersModel?>((ref) async* {
+final currentUserProvider =
+    StreamProvider.autoDispose<UsersModel?>((ref) async* {
   final fire = FirebaseFirestore.instance;
   final uid = getUser?.uid;
+  final snap = fire.collection(FirePath.users).doc(uid).snapshots();
+
+  final user = snap.map((event) => UsersModel.fromDoc(event));
+
+  yield* user;
+});
+
+final userProvider =
+    StreamProvider.family.autoDispose<UsersModel, String>((ref, uid) async* {
+  final fire = FirebaseFirestore.instance;
   final snap = fire.collection(FirePath.users).doc(uid).snapshots();
 
   final user = snap.map((event) => UsersModel.fromDoc(event));

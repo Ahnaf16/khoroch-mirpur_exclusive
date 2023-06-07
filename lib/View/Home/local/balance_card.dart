@@ -1,7 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:khoroch/View/Home/local/user_card.dart';
+import 'package:khoroch/View/user/local/user_card.dart';
 import 'package:khoroch/services/services.dart';
 import 'package:khoroch/theme/theme.dart';
 import 'package:khoroch/widgets/widgets.dart';
