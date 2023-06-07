@@ -10,6 +10,7 @@ import 'package:khoroch/models/enums.dart';
 import 'package:khoroch/models/models.dart';
 import 'package:khoroch/services/services.dart';
 import 'package:khoroch/widgets/widgets.dart';
+import 'package:nanoid/nanoid.dart';
 
 class ExpandState {
   ExpandState({
@@ -77,11 +78,14 @@ class ExpenditureNotifier extends StateNotifier<ExpandState> {
     if (!isValid(context)) {
       return 0;
     }
+    final docId = nanoid(10);
+
+    state = state.copyWith(expend: state.expend.copyWith(docId: docId));
 
     try {
       _loader(context).show('Please Wait');
-      final doc =
-          _coll().doc(state.expend.date.millisecondsSinceEpoch.toString());
+
+      final doc = _coll().doc(docId);
 
       if (intend == Intend.approval) {
         await doc.update(state.expend.toMap());

@@ -16,7 +16,7 @@ class KAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return PreferredSize(
-      preferredSize: const Size.fromHeight(85),
+      preferredSize: preferredSize,
       child: Container(
         clipBehavior: Clip.none,
         height: 100,

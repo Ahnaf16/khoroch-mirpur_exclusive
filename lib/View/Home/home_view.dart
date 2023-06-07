@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -73,10 +71,7 @@ class HomePage extends ConsumerWidget {
           ),
         ),
         body: expendData.when(
-          error: (error, stackTrace) {
-            log(error.toString());
-            return const Center(child: Text('E R R O R'));
-          },
+          error: ErrorView.errorMathod,
           loading: () => const Loader(isList: true),
           data: (expenders) {
             final totalExp = expenders.map((e) => e.amount).sum;
@@ -99,8 +94,7 @@ class HomePage extends ConsumerWidget {
         ),
         // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: userData.when(
-            error: (error, stackTrace) =>
-                const Center(child: Text('E R R O R')),
+            error: ErrorView.errorMathod,
             loading: () => const Loader(),
             data: (user) {
               final intend = user != null

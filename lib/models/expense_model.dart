@@ -23,7 +23,7 @@ class ExpenseModel {
     required this.status,
     required this.date,
     required this.addedBy,
-    this.docId = '',
+    required this.docId,
   });
 
   factory ExpenseModel.fromDoc(DocumentSnapshot doc) {
@@ -33,7 +33,7 @@ class ExpenseModel {
       date: (doc['date'] as Timestamp).toDate(),
       status: ExpenseStatus.fromMap(doc['status']),
       addedBy: UsersModel.fromMap(doc['addedBy']),
-      docId: doc.id,
+      docId: doc['id'],
     );
   }
 
@@ -43,6 +43,7 @@ class ExpenseModel {
     date: DateTime.now(),
     status: ExpenseStatus.pending,
     addedBy: null,
+    docId: '',
   );
 
   final int amount;
@@ -60,6 +61,7 @@ class ExpenseModel {
     result.addAll({'status': status.name});
     result.addAll({'date': date});
     result.addAll({'addedBy': addedBy?.toMap()});
+    result.addAll({'id': docId});
 
     return result;
   }
@@ -70,13 +72,15 @@ class ExpenseModel {
     ExpenseStatus? status,
     DateTime? date,
     UsersModel? addedBy,
+    String? docId,
   }) {
     return ExpenseModel(
       amount: amount ?? this.amount,
       item: item ?? this.item,
       status: status ?? this.status,
       date: date ?? this.date,
-      addedBy: addedBy ?? addedBy,
+      addedBy: addedBy ?? this.addedBy,
+      docId: docId ?? this.docId,
     );
   }
 }

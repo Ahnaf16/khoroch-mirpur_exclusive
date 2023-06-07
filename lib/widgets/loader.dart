@@ -3,46 +3,6 @@ import 'package:khoroch/core/extensions.dart';
 import 'package:khoroch/models/enums.dart';
 import 'package:khoroch/theme/theme.dart';
 
-import 'package:khoroch/widgets/widgets.dart';
-
-class Loader extends StatelessWidget {
-  const Loader({
-    super.key,
-    this.isList = false,
-    this.height,
-    this.width,
-  });
-
-  final bool isList;
-  final double? height;
-  final double? width;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        if (isList)
-          Column(
-            children: [
-              ...List.generate(
-                5,
-                (index) => KShimmer.card(
-                  height: height ?? 50,
-                  width: width ?? double.maxFinite,
-                ),
-              )
-            ],
-          )
-        else
-          KShimmer.card(
-            height: height ?? 150,
-            width: width ?? double.maxFinite,
-          ),
-      ],
-    );
-  }
-}
-
 class OverlayLoader {
   OverlayLoader(this.context);
 
@@ -87,24 +47,27 @@ class OverlayLoader {
     required SnackType type,
   }) {
     return OverlayEntry(
-      builder: (context) => Align(
-        alignment: alignment,
-        child: Container(
-          height: context.height / 7,
-          width: context.width / 2,
-          decoration: AppTheme.neuDecoration,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              type.widget,
-              const SizedBox(height: 15),
-              Text(
-                message,
-                style: context.textTheme.bodyMedium!.copyWith(
-                  fontWeight: FontWeight.w600,
+      builder: (context) => GestureDetector(
+        onTap: () => remove(context),
+        child: Align(
+          alignment: alignment,
+          child: Container(
+            height: context.height / 7,
+            width: context.width / 2,
+            decoration: AppTheme.neuDecoration,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                type.widget,
+                const SizedBox(height: 15),
+                Text(
+                  message,
+                  style: context.textTheme.bodyMedium!.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

@@ -16,7 +16,6 @@ class UserRepo {
   createUserDoc(User fireUser) async {
     try {
       final user = UsersModel(
-        collectedCash: [],
         name: fireUser.displayName ?? '',
         photo: fireUser.photoURL ?? '',
         uid: fireUser.uid,
