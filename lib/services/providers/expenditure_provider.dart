@@ -6,6 +6,7 @@ import 'package:khoroch/models/models.dart';
 final expenditureProvider = StreamProvider<List<ExpenseModel>>((ref) async* {
   final doc = FirebaseFirestore.instance
       .collection(FirePath.expend)
+      .where('toBeDeleted', isEqualTo: false)
       .orderBy('date', descending: true);
   final snap = doc.snapshots();
 

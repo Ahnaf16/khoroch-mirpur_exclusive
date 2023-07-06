@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:khoroch/View/Home/local/app_drawer.dart';
 import 'package:khoroch/View/Home/local/balance_card.dart';
 
 import 'package:khoroch/View/Home/local/expense_sheet.dart';
@@ -10,6 +11,8 @@ import 'package:khoroch/models/enums.dart';
 import 'package:khoroch/services/services.dart';
 import 'package:khoroch/theme/theme.dart';
 import 'package:khoroch/widgets/widgets.dart';
+
+import 'local/show_balance.dart';
 
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});
@@ -26,7 +29,7 @@ class HomePage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final expendData = ref.watch(expenditureProvider);
     final userData = ref.watch(currentUserProvider);
-    final authCtrl = ref.read(authCtrlProvider.notifier);
+    final cashByUsers = ref.watch(totalCashCollectedProvider);
 
     final img = getUser?.photoURL;
     return SafeArea(
@@ -55,21 +58,7 @@ class HomePage extends ConsumerWidget {
               ),
           ],
         ),
-        drawer: Container(
-          decoration: AppTheme.neuDecoration,
-          width: context.width / 1.5,
-          child: ListView(
-            children: [
-              TextButton.icon(
-                onPressed: () {
-                  authCtrl.logOut();
-                },
-                icon: const Icon(Icons.logout_rounded),
-                label: const Text('LOGOUT'),
-              ),
-            ],
-          ),
-        ),
+        drawer: const AppDrawer(),
         body: expendData.when(
           error: ErrorView.errorMathod,
           loading: () => const Loader(isList: true),
@@ -79,8 +68,51 @@ class HomePage extends ConsumerWidget {
               physics: const ClampingScrollPhysics(),
               child: Column(
                 children: [
+                  // Balance calculation ----------------------------------
+                  cashByUsers.when(
+                    error: ErrorView.errorMathod,
+                    loading: () => const Loader(),
+                    data: (cash) => Container(
+                      padding: const EdgeInsets.all(10),
+                      margin: const EdgeInsets.all(20),
+                      decoration: AppTheme.neuDecoration,
+                      alignment: Alignment.center,
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              ShowBalance(
+                                total: cash,
+                                title: 'TOTAL BALANCE',
+                              ),
+                              const KDivider(),
+                              ShowBalance(
+                                total: totalExp,
+                                title: 'TOTAL EXPEND',
+                                warn: totalExp > cash,
+                              ),
+                            ],
+                          ),
+                          if (totalExp > cash) const SizedBox(height: 10),
+                          Visibility(
+                            visible: totalExp > cash,
+                            child: ShowBalance(
+                              total: cash - totalExp,
+                              title: 'Liabilities',
+                              warn: totalExp > cash,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  // users and balance -------------------------------------
                   BalanceCard(totalExp: totalExp),
                   const SizedBox(height: 10),
+
+                  // expenditures ------------------------------------------
                   Text(
                     'Expenditure',
                     style: context.textTheme.titleLarge,

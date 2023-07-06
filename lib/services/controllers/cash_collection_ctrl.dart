@@ -38,5 +38,12 @@ class CashCollectionNotifier extends StateNotifier<CashCollection> {
     _loader(context).showSuccess('Success');
   }
 
+  delete(BuildContext context, String docId) async {
+    _loader(context).show('Deleting');
+    await _coll().doc(docId).delete();
+    context.pop;
+    _loader(context).showSuccess('Delete Successfully');
+  }
+
   OverlayLoader _loader(BuildContext context) => OverlayLoader(context);
 }

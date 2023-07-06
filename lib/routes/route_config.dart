@@ -9,12 +9,15 @@ import 'package:khoroch/routes/pages/splash.dart';
 import 'package:khoroch/services/services.dart';
 import 'package:routemaster/routemaster.dart';
 
+import '../View/trash/trash_view.dart';
+
 class RouteName {
   static const String root = '/';
   static const String login = '/login';
   static const String home = '/home';
   static String user(uid) => '/home/$uid';
   static const String splash = '/splash';
+  static const String trash = '$home/trash';
 }
 
 class RouteLogObserver extends RoutemasterObserver {
@@ -33,13 +36,24 @@ final routesProvider = Provider<RoutemasterDelegate>((ref) {
     return canNavigate ? page : const MaterialPage(child: SplashScreen());
   }
 
+  log('auth : ${authState.name}');
+
   RouteMap routeMap() {
     if (authState == AuthState.unauthenticated) {
       return RouteMap(
-        onUnknownRoute: (path) => const Redirect(RouteName.login),
+        onUnknownRoute: (path) {
+          log('unknown : $path');
+          return const Redirect(RouteName.login);
+        },
         routes: {
           RouteName.root: (route) => const MaterialPage(child: LoginPage()),
           RouteName.login: (route) => const MaterialPage(child: LoginPage()),
+        },
+      );
+    } else if (authState == AuthState.loading) {
+      return RouteMap(
+        routes: {
+          RouteName.root: (route) => const MaterialPage(child: SplashScreen()),
         },
       );
     } else {
@@ -60,6 +74,8 @@ final routesProvider = Provider<RoutemasterDelegate>((ref) {
               splashGuard(page: const MaterialPage(child: LoginPage())),
           RouteName.home: (route) =>
               splashGuard(page: const MaterialPage(child: HomePage())),
+          RouteName.trash: (route) =>
+              splashGuard(page: const MaterialPage(child: TrashView())),
           RouteName.user(':uid'): (route) {
             final uid = route.pathParameters['uid'];
             return splashGuard(

@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:khoroch/View/Home/local/expense_sheet.dart';
-import 'package:khoroch/models/enums.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:khoroch/models/models.dart';
 import 'package:khoroch/services/services.dart';
+import 'package:khoroch/widgets/expand_tile.dart';
 import 'package:khoroch/widgets/widgets.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-
-import 'package:khoroch/core/extensions.dart';
-import 'package:khoroch/theme/theme.dart';
 
 class ExpenditureList extends ConsumerWidget {
   const ExpenditureList({
@@ -37,72 +33,27 @@ class ExpenditureList extends ConsumerWidget {
           itemCount: expenders.length,
           itemBuilder: (BuildContext context, int index) {
             final expense = expenders[index];
-            return Container(
-              padding: const EdgeInsets.all(10),
-              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              decoration: AppTheme.neuDecoration,
-              child: Row(
+            final expenseCtrl = ref.read(expenditureCtrl(expense).notifier);
+            return Slidable(
+              enabled: canAdd,
+              endActionPane: ActionPane(
+                extentRatio: 0.2,
+                motion: const ScrollMotion(),
                 children: [
-                  const Icon(MdiIcons.currencyBdt),
-                  const SizedBox(width: 20),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        expense.amount.toCurrency,
-                        style: context.textTheme.titleLarge,
-                      ),
-                      Text(
-                        expense.item,
-                        style: context.textTheme.labelLarge,
-                      ),
-                    ],
-                  ),
-                  const Spacer(),
-                  Text(
-                    expense.date.formateDate(),
-                    style: context.textTheme.labelLarge,
-                    textAlign: TextAlign.end,
-                  ),
-                  const SizedBox(width: 10),
-                  Column(
-                    children: [
-                      Container(
-                        clipBehavior: Clip.none,
-                        decoration: AppTheme.neuDecoration.copyWith(
-                          borderRadius: BorderRadius.circular(100),
-                          image: DecorationImage(
-                            image: KCachedImg(
-                              url: expense.addedBy!.photo,
-                            ).provider,
-                          ),
-                        ),
-                        height: 20,
-                        width: 20,
-                      ),
-                      if (expense.status != ExpenseStatus.approved)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 5),
-                          child: InkWell(
-                            onTap: !canAdd
-                                ? null
-                                : () {
-                                    showModalBottomSheet(
-                                      context: context,
-                                      isScrollControlled: true,
-                                      builder: (context) => AddExpanseSheet(
-                                        intend: Intend.approval,
-                                        updatingExpense: expense,
-                                      ),
-                                    );
-                                  },
-                            child: Icon(expense.status.icon),
-                          ),
-                        ),
-                    ],
+                  SlidableAction(
+                    onPressed: (context) {
+                      expenseCtrl.moveToTrash(context);
+                    },
+                    borderRadius: BorderRadius.circular(10),
+                    backgroundColor: Colors.red.withOpacity(.1),
+                    foregroundColor: Colors.red,
+                    icon: Icons.delete,
+                    label: 'Delete',
+                    autoClose: true,
                   ),
                 ],
               ),
+              child: ExpandTile(expense: expense, canAdd: canAdd),
             );
           },
         );

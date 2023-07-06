@@ -24,17 +24,18 @@ class ExpenseModel {
     required this.date,
     required this.addedBy,
     required this.docId,
+    required this.toBeDeleted,
   });
 
   factory ExpenseModel.fromDoc(DocumentSnapshot doc) {
     return ExpenseModel(
-      amount: doc['amount'] ?? 0,
-      item: doc['item'] ?? '',
-      date: (doc['date'] as Timestamp).toDate(),
-      status: ExpenseStatus.fromMap(doc['status']),
-      addedBy: UsersModel.fromMap(doc['addedBy']),
-      docId: doc['id'],
-    );
+        amount: doc['amount'] ?? 0,
+        item: doc['item'] ?? '',
+        date: (doc['date'] as Timestamp).toDate(),
+        status: ExpenseStatus.fromMap(doc['status']),
+        addedBy: UsersModel.fromMap(doc['addedBy']),
+        docId: doc['id'],
+        toBeDeleted: doc['toBeDeleted']);
   }
 
   static ExpenseModel empty = ExpenseModel(
@@ -44,6 +45,7 @@ class ExpenseModel {
     status: ExpenseStatus.pending,
     addedBy: null,
     docId: '',
+    toBeDeleted: false,
   );
 
   final int amount;
@@ -52,6 +54,7 @@ class ExpenseModel {
   final ExpenseStatus status;
   final String docId;
   final UsersModel? addedBy;
+  final bool toBeDeleted;
 
   Map<String, dynamic> toMap() {
     final result = <String, dynamic>{};
@@ -62,6 +65,7 @@ class ExpenseModel {
     result.addAll({'date': date});
     result.addAll({'addedBy': addedBy?.toMap()});
     result.addAll({'id': docId});
+    result.addAll({'toBeDeleted': toBeDeleted});
 
     return result;
   }
@@ -73,6 +77,7 @@ class ExpenseModel {
     DateTime? date,
     UsersModel? addedBy,
     String? docId,
+    bool? toBeDeleted,
   }) {
     return ExpenseModel(
       amount: amount ?? this.amount,
@@ -81,6 +86,7 @@ class ExpenseModel {
       date: date ?? this.date,
       addedBy: addedBy ?? this.addedBy,
       docId: docId ?? this.docId,
+      toBeDeleted: toBeDeleted ?? this.toBeDeleted,
     );
   }
 }

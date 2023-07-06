@@ -2,11 +2,14 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+
 import 'package:khoroch/core/extensions.dart';
+import 'package:khoroch/models/users_model.dart';
 import 'package:khoroch/services/services.dart';
 import 'package:khoroch/theme/theme.dart';
 import 'package:khoroch/widgets/widgets.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class UserDetails extends ConsumerWidget {
   const UserDetails({required this.uid, super.key});
@@ -19,6 +22,14 @@ class UserDetails extends ConsumerWidget {
     final currentUserData = ref.watch(currentUserProvider);
     final cashCollections = ref.watch(cashCollectionsProvider(uid));
     final cashCtrl = ref.read(cashCollectionCtrl(uid).notifier);
+
+    var user = currentUserData.value;
+
+    final canAdd = switch (user) {
+      null => false,
+      _ when user.canAdd => true,
+      _ => false,
+    };
 
     return userData.when(
       error: ErrorView.errorMathod,
@@ -88,34 +99,31 @@ class UserDetails extends ConsumerWidget {
                           itemCount: cash.length,
                           itemBuilder: (context, index) {
                             final collected = cash[index];
-                            return Container(
-                              padding: const EdgeInsets.all(10),
-                              margin: const EdgeInsets.symmetric(
-                                  horizontal: 20, vertical: 10),
-                              decoration: AppTheme.neuDecoration,
-                              child: Row(
+                            return Slidable(
+                              enabled: canAdd,
+                              endActionPane: ActionPane(
+                                motion: const ScrollMotion(),
                                 children: [
-                                  const Icon(MdiIcons.currencyBdt),
-                                  const SizedBox(width: 20),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        collected.amount.toCurrency,
-                                        style: context.textTheme.titleLarge,
-                                      ),
-                                    ],
+                                  SlidableAction(
+                                    onPressed: (context) {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) => CashDeleteDialog(
+                                          onDelete: () => cashCtrl.delete(
+                                              context, collected.id),
+                                        ),
+                                      );
+                                    },
+                                    borderRadius: BorderRadius.circular(10),
+                                    backgroundColor: Colors.red.withOpacity(.1),
+                                    foregroundColor: Colors.red,
+                                    icon: Icons.delete_forever,
+                                    label: 'Delete',
+                                    autoClose: true,
                                   ),
-                                  const Spacer(),
-                                  Text(
-                                    collected.date.formateDate(),
-                                    style: context.textTheme.labelLarge,
-                                    textAlign: TextAlign.end,
-                                  ),
-                                  const SizedBox(width: 10),
                                 ],
                               ),
+                              child: UserCashTile(collected: collected),
                             );
                           },
                         ),
@@ -159,6 +167,82 @@ class UserDetails extends ConsumerWidget {
           },
         );
       },
+    );
+  }
+}
+
+class CashDeleteDialog extends StatelessWidget {
+  const CashDeleteDialog({
+    super.key,
+    required this.onDelete,
+  });
+
+  final Function() onDelete;
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      elevation: 50,
+      backgroundColor: AppTheme.backgroundColor,
+      actionsAlignment: MainAxisAlignment.spaceBetween,
+      actionsPadding:
+          const EdgeInsets.symmetric(horizontal: 20).copyWith(bottom: 20),
+      actions: [
+        NeuButton(
+          onTap: () => context.pop,
+          width: 50,
+          child: const Icon(Icons.close_rounded),
+        ),
+        NeuButton(
+          width: 150,
+          onTap: onDelete,
+          child: const Text('Delete'),
+        ),
+      ],
+      title: const Text('Sure ??'),
+      content: const Text(
+        'Are you sure? \nThis Can\'t be undone',
+      ),
+    );
+  }
+}
+
+class UserCashTile extends StatelessWidget {
+  const UserCashTile({
+    super.key,
+    required this.collected,
+  });
+
+  final CashCollection collected;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(10),
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      decoration: AppTheme.neuDecoration,
+      child: Row(
+        children: [
+          const Icon(MdiIcons.currencyBdt),
+          const SizedBox(width: 20),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                collected.amount.toCurrency,
+                style: context.textTheme.titleLarge,
+              ),
+            ],
+          ),
+          const Spacer(),
+          Text(
+            collected.date.formateDate(),
+            style: context.textTheme.labelLarge,
+            textAlign: TextAlign.end,
+          ),
+          const SizedBox(width: 10),
+        ],
+      ),
     );
   }
 }

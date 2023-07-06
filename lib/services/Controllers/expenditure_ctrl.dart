@@ -41,20 +41,21 @@ final expenditureCtrl = StateNotifierProvider.family<ExpenditureNotifier,
 });
 
 class ExpenditureNotifier extends StateNotifier<ExpandState> {
-  ExpenditureNotifier(ExpenseModel? updatingExpense)
+  ExpenditureNotifier(this.updatingExpense)
       : super(ExpandState.empty.copyWith(expend: updatingExpense)) {
-    init(updatingExpense);
+    init();
   }
   final amountCtrl = TextEditingController();
   final itemCtrl = TextEditingController();
 
   final _fire = FirebaseFirestore.instance;
   final uid = getUser?.uid;
+  final ExpenseModel? updatingExpense;
 
-  init(ExpenseModel? updatingExpense) {
+  init() {
     if (updatingExpense != null) {
-      amountCtrl.text = updatingExpense.amount.toString();
-      itemCtrl.text = updatingExpense.item;
+      amountCtrl.text = updatingExpense!.amount.toString();
+      itemCtrl.text = updatingExpense!.item;
     }
   }
 
@@ -69,7 +70,9 @@ class ExpenditureNotifier extends StateNotifier<ExpandState> {
 
     final snap = await _fire.collection(FirePath.users).doc(uid).get();
 
-    final user = UsersModel.fromDoc(snap);
+    final user = updatingExpense == null
+        ? UsersModel.fromDoc(snap)
+        : updatingExpense!.addedBy;
 
     state = state.copyWith(
       expend: state.expend.copyWith(status: status, addedBy: user),
@@ -78,7 +81,7 @@ class ExpenditureNotifier extends StateNotifier<ExpandState> {
     if (!isValid(context)) {
       return 0;
     }
-    final docId = nanoid(10);
+    final docId = updatingExpense == null ? nanoid(10) : updatingExpense!.docId;
 
     state = state.copyWith(expend: state.expend.copyWith(docId: docId));
 
@@ -111,6 +114,17 @@ class ExpenditureNotifier extends StateNotifier<ExpandState> {
         _coll().doc(state.expend.date.millisecondsSinceEpoch.toString());
 
     await doc.update(state.expend.toMap());
+  }
+
+  moveToTrash(BuildContext context) async {
+    if (updatingExpense == null) {
+      _loader(context).showError('Unable to delete');
+      return 0;
+    } else {
+      final doc = _coll().doc(updatingExpense!.docId);
+      final data = state.expend.copyWith(toBeDeleted: true).toMap();
+      await doc.update(data);
+    }
   }
 
   bool isValid(BuildContext context) {

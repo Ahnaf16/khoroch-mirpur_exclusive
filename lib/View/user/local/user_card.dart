@@ -31,6 +31,20 @@ class UserCard extends ConsumerWidget {
                   padding: const EdgeInsets.all(15),
                   decoration: AppTheme.neuDecoration.copyWith(
                     borderRadius: BorderRadius.circular(10),
+                    boxShadow: getUser?.uid == user.uid
+                        ? [
+                            BoxShadow(
+                              blurRadius: 15,
+                              color: Colors.blue.withOpacity(.2),
+                              offset: const Offset(4, 4),
+                            ),
+                            BoxShadow(
+                              blurRadius: 15,
+                              color: Colors.blue.withOpacity(.2),
+                              offset: const Offset(-4, -4),
+                            ),
+                          ]
+                        : null,
                   ),
                   child: Column(
                     children: [
