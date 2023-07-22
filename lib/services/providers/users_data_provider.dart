@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:khoroch/core/const/firebase_const.dart';
 import 'package:khoroch/models/models.dart';
-import 'package:khoroch/services/services.dart';
+import 'package:khoroch/services/providers/providers.dart';
 
 final userListProvider = StreamProvider<List<UsersModel>>((ref) async* {
   final fire = FirebaseFirestore.instance;

@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:khoroch/core/util/util.dart';
+import 'package:khoroch/core/core.dart';
 import 'package:khoroch/services/repository/repository.dart';
 
 final authRepoProvider = Provider<AuthRepo>((ref) {

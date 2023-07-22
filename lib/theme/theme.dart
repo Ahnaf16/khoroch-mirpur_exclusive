@@ -66,6 +66,7 @@ class AppTheme {
       ),
     ),
     textTheme: textTheme(),
+    colorScheme: ColorScheme.fromSeed(seedColor: defContentColor),
   );
 
   static TextTheme textTheme() {

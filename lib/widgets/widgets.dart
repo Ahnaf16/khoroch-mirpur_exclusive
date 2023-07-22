@@ -3,5 +3,6 @@ export 'button.dart';
 export 'cached_img.dart';
 export 'divider.dart';
 export 'error_loading.dart';
+export 'expans_tile.dart';
 export 'loader.dart';
 export 'shimmer.dart';

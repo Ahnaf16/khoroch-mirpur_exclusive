@@ -7,36 +7,56 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:khoroch/core/const/firebase_const.dart';
 import 'package:khoroch/core/extensions.dart';
 import 'package:khoroch/models/models.dart';
-import 'package:khoroch/widgets/widgets.dart';
+import 'package:khoroch/services/controllers/group_ctrl.dart';
 import 'package:nanoid/nanoid.dart';
 
-final cashCollectionCtrl = StateNotifierProvider.family<CashCollectionNotifier,
-    CashCollection, String>((ref, uid) => CashCollectionNotifier(uid));
+final cashCollectionCtrl = StateNotifierProvider.family<
+    CashCollectionNotifier,
+    CashCollection,
+    ({String uid, String gid})>((ref, ids) => CashCollectionNotifier(ref, ids));
 
 class CashCollectionNotifier extends StateNotifier<CashCollection> {
-  CashCollectionNotifier(this.uid) : super(CashCollection.empty);
-
+  CashCollectionNotifier(this._ref, this.ids) : super(CashCollection.empty);
+  final Ref _ref;
   final _fire = FirebaseFirestore.instance;
-  final String uid;
+  final ({String uid, String gid}) ids;
 
   final amountCtrl = TextEditingController();
 
   CollectionReference _coll() => _fire
-      .collection(FirePath.users)
-      .doc(uid)
+      .collection(FirePath.group)
+      .doc(ids.gid)
       .collection(FirePath.cashCollection);
 
   addNewCashRecord(BuildContext context) async {
     if (amountCtrl.text.isEmpty) {
-      return _loader(context).showError('Enter Cash Amount');
+      return context.showOverLay.showError('Enter Cash Amount');
     }
-    _loader(context).show('Adding');
+    context.showOverLay.show('Adding');
+    final groupCtrl = _ref.read(groupCtrlProvider.notifier);
+
+    final userSnap = await _fire.collection(FirePath.users).doc(ids.uid).get();
+    final user = UsersModel.fromDoc(userSnap);
+
     final docId = nanoid(10);
-    state = state.copyWith(id: docId, amount: amountCtrl.text.asInt);
+    state = state.copyWith(
+      id: docId,
+      amount: amountCtrl.text.asInt,
+      user: user,
+    );
     await _coll().doc(docId).set(state.toMap());
+    groupCtrl.updateUserCash(
+        context, ids.gid, user.uid, amountCtrl.text.asInt, true);
     amountCtrl.clear();
-    _loader(context).showSuccess('Success');
+    context.showOverLay.showSuccess('Success');
   }
 
-  OverlayLoader _loader(BuildContext context) => OverlayLoader(context);
+  delete(BuildContext context, String docId, String uid, int amount) async {
+    final groupCtrl = _ref.read(groupCtrlProvider.notifier);
+    context.showOverLay.show('Deleting');
+    await _coll().doc(docId).delete();
+    await groupCtrl.updateUserCash(context, ids.gid, uid, amount, false);
+    context.pop;
+    context.showOverLay.showSuccess('Delete Successfully');
+  }
 }

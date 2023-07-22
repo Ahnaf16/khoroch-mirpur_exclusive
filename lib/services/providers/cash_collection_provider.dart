@@ -5,12 +5,14 @@ import 'package:khoroch/core/const/firebase_const.dart';
 import 'package:khoroch/models/models.dart';
 
 final cashCollectionsProvider = StreamProvider.family
-    .autoDispose<List<CashCollection>, String>((ref, uid) async* {
+    .autoDispose<List<CashCollection>, ({String uid, String gid})>(
+        (ref, ids) async* {
   var fire = FirebaseFirestore.instance;
   final snap = fire
-      .collection(FirePath.users)
-      .doc(uid)
+      .collection(FirePath.group)
+      .doc(ids.gid)
       .collection(FirePath.cashCollection)
+      .where('user.uid', isEqualTo: ids.uid)
       .orderBy('date', descending: true)
       .snapshots();
 

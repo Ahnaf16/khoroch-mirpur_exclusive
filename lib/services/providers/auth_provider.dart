@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:khoroch/services/services.dart';
+import 'package:khoroch/services/controllers/controllers.dart';
 
 User? get getUser => FirebaseAuth.instance.currentUser;
 

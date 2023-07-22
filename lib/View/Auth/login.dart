@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:khoroch/services/controllers/controllers.dart';
 
-import 'package:khoroch/services/services.dart';
 import 'package:khoroch/widgets/widgets.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 

@@ -6,12 +6,14 @@ class KAppBar extends StatelessWidget implements PreferredSizeWidget {
     super.key,
     required this.title,
     this.actions,
+    this.leading,
   }) : preferredSize = const Size.fromHeight(100);
 
   @override
   final Size preferredSize;
   final String title;
   final List<Widget>? actions;
+  final Widget? leading;
 
   @override
   Widget build(BuildContext context) {
@@ -27,8 +29,8 @@ class KAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
         alignment: Alignment.center,
         child: AppBar(
-          automaticallyImplyLeading: false,
           clipBehavior: Clip.none,
+          leading: leading,
           title: Text(title),
           actions: actions,
         ),

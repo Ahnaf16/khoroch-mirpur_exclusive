@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:khoroch/models/enums.dart';
+import 'package:khoroch/services/controllers/controllers.dart';
 import 'package:khoroch/widgets/widgets.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 import 'package:khoroch/core/const/quick_items.dart';
 import 'package:khoroch/core/extensions.dart';
 import 'package:khoroch/models/models.dart';
-import 'package:khoroch/services/services.dart';
 
 import '../../../theme/theme.dart';
 
@@ -16,12 +15,14 @@ class AddExpanseSheet extends ConsumerWidget {
   const AddExpanseSheet({
     super.key,
     required this.intend,
+    required this.groupId,
     this.updatingExpense,
   });
 
   /// null when updating
   final Intend intend;
   final ExpenseModel? updatingExpense;
+  final String groupId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -157,13 +158,13 @@ class AddExpanseSheet extends ConsumerWidget {
             children: [
               if (intend == Intend.approval)
                 NeuButton(
-                  onTap: () => expenseCtrl.rejected(),
+                  onTap: () => expenseCtrl.rejected(context, groupId),
                   width: context.width / 2.5,
                   child: const Icon(Icons.close),
                 ),
               if (intend == Intend.approval) const SizedBox(width: 20),
               NeuButton(
-                onTap: () => expenseCtrl.addNew(context, intend),
+                onTap: () => expenseCtrl.addNew(context, intend, groupId),
                 height: 50,
                 width: context.width / 2.5,
                 child: Text(intend.name),

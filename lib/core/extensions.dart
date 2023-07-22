@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:khoroch/theme/theme.dart';
+import 'package:khoroch/widgets/widgets.dart';
 import 'package:routemaster/routemaster.dart';
 
 extension ContextEx on BuildContext {
@@ -26,19 +27,23 @@ extension ContextEx on BuildContext {
     return Routemaster.of(this).push(route, queryParameters: quarry);
   }
 
-  showSnack(String content) => WidgetsBinding.instance.addPostFrameCallback(
-        (_) => showSnackContent(
-          Text(content, style: textTheme.bodyMedium),
+  showSnack(String content) =>
+      showSnackContent(Text(content, style: textTheme.bodyMedium));
+  showError(String content) => showSnackContent(
+        Text(
+          content,
+          style: textTheme.bodyMedium?.copyWith(color: Colors.white),
         ),
+        true,
       );
 
-  showSnackContent(
-    Widget content,
-  ) =>
+  showSnackContent(Widget content, [bool isError = false]) =>
       ScaffoldMessenger.of(this).showSnackBar(
         SnackBar(
           content: content,
-          backgroundColor: AppTheme.backgroundColor,
+          backgroundColor: isError
+              ? AppTheme.errorColor.withOpacity(.7)
+              : AppTheme.backgroundColor,
           elevation: 30,
           behavior: SnackBarBehavior.floating,
           clipBehavior: Clip.none,
@@ -47,6 +52,15 @@ extension ContextEx on BuildContext {
           ),
         ),
       );
+
+  OverlayLoader get showOverLay => OverlayLoader(this);
+
+  removeFocus() {
+    FocusScopeNode currentFocus = FocusScope.of(this);
+    if (!currentFocus.hasPrimaryFocus && currentFocus.focusedChild != null) {
+      FocusManager.instance.primaryFocus?.unfocus();
+    }
+  }
 }
 
 extension StringEx on String {
