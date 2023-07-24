@@ -90,7 +90,6 @@ final routesProvider = Provider<RoutemasterDelegate>((ref) {
             final gId = route.pathParameters['gid'];
             return splashGuard(
               page: MaterialPage(
-                fullscreenDialog: true,
                 child: UserDetails(uid: uid!, groupId: gId!),
               ),
             );

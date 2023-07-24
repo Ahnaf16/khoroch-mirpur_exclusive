@@ -13,15 +13,15 @@ enum SnackType {
         error => _widget(Icons.error_outline),
         loading => Center(
             child: CircularProgressIndicator(
-              backgroundColor: AppTheme.backgroundColor,
-              color: AppTheme.defContentColor,
+              backgroundColor: AppTheme.mainColor,
+              color: AppTheme.foregroundColor,
             ),
           ),
       };
 
   _widget(IconData icon) {
     return Center(
-      child: Icon(Icons.info_outline_rounded, color: AppTheme.defContentColor),
+      child: Icon(Icons.info_outline_rounded, color: AppTheme.foregroundColor),
     );
   }
 }

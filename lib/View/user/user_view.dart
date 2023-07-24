@@ -59,7 +59,7 @@ class UserDetails extends ConsumerWidget {
                               height: 100,
                               width: 100,
                               clipBehavior: Clip.none,
-                              decoration: AppTheme.neuDecoration.copyWith(
+                              decoration: AppTheme.decoration(context).copyWith(
                                 color: Colors.red,
                                 borderRadius: BorderRadius.circular(100),
                                 image: DecorationImage(
@@ -145,7 +145,7 @@ class UserDetails extends ConsumerWidget {
                           margin: const EdgeInsets.all(20),
                           padding: const EdgeInsets.symmetric(
                               horizontal: 20, vertical: 15),
-                          decoration: AppTheme.neuDecoration.copyWith(
+                          decoration: AppTheme.decoration(context).copyWith(
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: const Row(
@@ -179,7 +179,7 @@ class CashDeleteDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       elevation: 50,
-      backgroundColor: AppTheme.backgroundColor,
+      backgroundColor: AppTheme.mainColor,
       actionsAlignment: MainAxisAlignment.spaceBetween,
       actionsPadding:
           const EdgeInsets.symmetric(horizontal: 20).copyWith(bottom: 20),
@@ -216,7 +216,7 @@ class UserCashTile extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(10),
       margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      decoration: AppTheme.neuDecoration,
+      decoration: AppTheme.decoration(context),
       child: Row(
         children: [
           const Icon(MdiIcons.currencyBdt),
@@ -255,7 +255,7 @@ class AddCashAmountDialog extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return AlertDialog(
       shape: RoundedRectangleBorder(
-        borderRadius: AppTheme.neuDecoration.borderRadius!,
+        borderRadius: AppTheme.decoration(context).borderRadius!,
       ),
       actions: [
         NeuButton(
@@ -272,11 +272,11 @@ class AddCashAmountDialog extends ConsumerWidget {
         ),
       ],
       actionsPadding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
-      backgroundColor: AppTheme.backgroundColor,
+      backgroundColor: AppTheme.mainColor,
       content: Container(
-        decoration: AppTheme.neuDecoration,
+        decoration: AppTheme.decoration(context),
         child: ClipRRect(
-          borderRadius: AppTheme.neuDecoration.borderRadius,
+          borderRadius: AppTheme.decoration(context).borderRadius,
           child: TextField(
             inputFormatters: [FilteringTextInputFormatter.digitsOnly],
             keyboardType: TextInputType.number,

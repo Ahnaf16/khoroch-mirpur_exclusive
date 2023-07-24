@@ -22,7 +22,7 @@ class ExpandTile extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(10),
       margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      decoration: AppTheme.neuDecoration,
+      decoration: AppTheme.decoration(context),
       child: Row(
         children: [
           const Icon(MdiIcons.currencyBdt),
@@ -51,7 +51,7 @@ class ExpandTile extends StatelessWidget {
             children: [
               Container(
                 clipBehavior: Clip.none,
-                decoration: AppTheme.neuDecoration.copyWith(
+                decoration: AppTheme.decoration(context).copyWith(
                   borderRadius: BorderRadius.circular(100),
                   image: DecorationImage(
                     image: KCachedImg(

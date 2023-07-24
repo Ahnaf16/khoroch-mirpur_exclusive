@@ -19,7 +19,6 @@ class AddExpanseSheet extends ConsumerWidget {
     this.updatingExpense,
   });
 
-  /// null when updating
   final Intend intend;
   final ExpenseModel? updatingExpense;
   final String groupId;
@@ -37,16 +36,16 @@ class AddExpanseSheet extends ConsumerWidget {
             children: [
               Flexible(
                 child: Container(
-                  decoration: AppTheme.neuDecoration,
+                  decoration: AppTheme.decoration(context),
                   child: ClipRRect(
-                    borderRadius: AppTheme.neuDecoration.borderRadius,
+                    borderRadius: AppTheme.decoration(context).borderRadius,
                     child: TextField(
                       controller: expenseCtrl.amountCtrl,
                       inputFormatters: [
                         FilteringTextInputFormatter.digitsOnly,
                       ],
                       keyboardType: TextInputType.number,
-                      cursorColor: Colors.grey.shade500,
+                      cursorColor: AppTheme.foregroundColor,
                       decoration: const InputDecoration(
                         labelText: 'Amount',
                         prefixIcon: Icon(MdiIcons.currencyBdt),
@@ -62,13 +61,15 @@ class AddExpanseSheet extends ConsumerWidget {
                   duration: const Duration(milliseconds: 300),
                   height: 48,
                   width: 48,
-                  decoration: AppTheme.neuDecoration.copyWith(
+                  decoration: AppTheme.decoration(context).copyWith(
                     borderRadius: BorderRadius.circular(10),
-                    color: expense.isAdd ? AppTheme.defContentColor : null,
+                    color: expense.isAdd
+                        ? AppTheme.foregroundColor.withOpacity(.5)
+                        : null,
                   ),
                   child: Icon(
                     Icons.add_rounded,
-                    color: expense.isAdd ? AppTheme.backgroundColor : null,
+                    color: expense.isAdd ? AppTheme.mainColor : null,
                   ),
                 ),
               ),
@@ -79,13 +80,15 @@ class AddExpanseSheet extends ConsumerWidget {
                   duration: const Duration(milliseconds: 300),
                   height: 48,
                   width: 48,
-                  decoration: AppTheme.neuDecoration.copyWith(
+                  decoration: AppTheme.decoration(context).copyWith(
                     borderRadius: BorderRadius.circular(10),
-                    color: !expense.isAdd ? AppTheme.defContentColor : null,
+                    color: !expense.isAdd
+                        ? AppTheme.foregroundColor.withOpacity(.5)
+                        : null,
                   ),
                   child: Icon(
                     Icons.remove_rounded,
-                    color: !expense.isAdd ? AppTheme.backgroundColor : null,
+                    color: !expense.isAdd ? AppTheme.mainColor : null,
                   ),
                 ),
               ),
@@ -105,7 +108,7 @@ class AddExpanseSheet extends ConsumerWidget {
                   child: Container(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 15, vertical: 10),
-                    decoration: AppTheme.neuDecoration.copyWith(
+                    decoration: AppTheme.decoration(context).copyWith(
                       borderRadius: BorderRadius.circular(5),
                     ),
                     child: Text((expense.isAdd ? '+ ' : '- ') + e.toCurrency),
@@ -116,9 +119,9 @@ class AddExpanseSheet extends ConsumerWidget {
           ),
           const SizedBox(height: 30),
           Container(
-            decoration: AppTheme.neuDecoration,
+            decoration: AppTheme.decoration(context),
             child: ClipRRect(
-              borderRadius: AppTheme.neuDecoration.borderRadius,
+              borderRadius: AppTheme.decoration(context).borderRadius,
               child: TextField(
                 controller: expenseCtrl.itemCtrl,
                 cursorColor: Colors.grey.shade500,
@@ -143,7 +146,7 @@ class AddExpanseSheet extends ConsumerWidget {
                   child: Container(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 15, vertical: 10),
-                    decoration: AppTheme.neuDecoration.copyWith(
+                    decoration: AppTheme.decoration(context).copyWith(
                       borderRadius: BorderRadius.circular(5),
                     ),
                     child: Text(e),

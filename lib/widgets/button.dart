@@ -45,7 +45,7 @@ class NeuButton extends StatelessWidget {
           onTap: onTap,
           child: Container(
             clipBehavior: Clip.none,
-            decoration: AppTheme.neuDecoration,
+            decoration: AppTheme.decoration(context),
             alignment: Alignment.center,
             height: height ?? 50,
             width: width,

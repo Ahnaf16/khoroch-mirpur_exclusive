@@ -29,7 +29,7 @@ class TrashView extends ConsumerWidget {
                   margin: const EdgeInsets.all(20),
                   padding:
                       const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-                  decoration: AppTheme.neuDecoration.copyWith(
+                  decoration: AppTheme.decoration(context).copyWith(
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: const Icon(Icons.delete_forever_rounded),
@@ -40,8 +40,8 @@ class TrashView extends ConsumerWidget {
           error: ErrorView.errorMathod,
           loading: () => const Loader(isList: true),
           data: (trashes) => RefreshIndicator(
-            color: AppTheme.defContentColor,
-            backgroundColor: AppTheme.backgroundColor,
+            color: AppTheme.foregroundColor,
+            backgroundColor: AppTheme.mainColor,
             onRefresh: () => Future(() => null), // trashCtrl.reload(),
             child: ListView.builder(
               itemCount: trashes.length,

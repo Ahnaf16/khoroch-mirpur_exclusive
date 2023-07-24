@@ -26,17 +26,11 @@ class HomeView extends ConsumerWidget {
             builder: (context) {
               return GestureDetector(
                 onTap: () => Scaffold.of(context).openDrawer(),
-                child: Container(
-                  clipBehavior: Clip.none,
-                  decoration: AppTheme.neuDecoration.copyWith(
-                    borderRadius: BorderRadius.circular(100),
+                child: NeuContainer(
+                  decoration:
+                      AppTheme.decoration(context, useRound: true).copyWith(
                     image: DecorationImage(
-                      image: KCachedImg(
-                        url: img!,
-                        height: 50,
-                        width: 50,
-                        fit: BoxFit.cover,
-                      ).provider,
+                      image: KCachedImg(url: img!).provider,
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -59,8 +53,8 @@ class HomeView extends ConsumerWidget {
                       const SliverSimpleGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
                   ),
-                  mainAxisSpacing: 10,
-                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 20,
+                  crossAxisSpacing: 20,
                   itemCount: data.length,
                   itemBuilder: (BuildContext context, int index) {
                     final group = data[index];
@@ -68,7 +62,7 @@ class HomeView extends ConsumerWidget {
                       onTap: () => context.pushTo(RouteName.group(group.id)),
                       child: Container(
                         padding: const EdgeInsets.all(10),
-                        decoration: AppTheme.neuDecoration,
+                        decoration: AppTheme.decoration(context),
                         child: Column(
                           children: [
                             Text(
@@ -97,7 +91,7 @@ class HomeView extends ConsumerWidget {
                                   (e) => Padding(
                                     padding: const EdgeInsets.all(5),
                                     child: CircleAvatar(
-                                      backgroundColor: AppTheme.defContentColor,
+                                      backgroundColor: AppTheme.foregroundColor,
                                       radius: 10,
                                       child: KCachedImg(
                                         url: e.photo,
@@ -124,7 +118,7 @@ class HomeView extends ConsumerWidget {
           child: Container(
             margin: const EdgeInsets.all(20),
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-            decoration: AppTheme.neuDecoration.copyWith(
+            decoration: AppTheme.decoration(context).copyWith(
               borderRadius: BorderRadius.circular(10),
             ),
             child: const Row(

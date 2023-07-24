@@ -67,7 +67,7 @@ class GroupExpanseView extends ConsumerWidget {
                     Container(
                       padding: const EdgeInsets.all(10),
                       margin: const EdgeInsets.all(20),
-                      decoration: AppTheme.neuDecoration,
+                      decoration: AppTheme.decoration(context),
                       alignment: Alignment.center,
                       child: Column(
                         children: [
@@ -102,7 +102,7 @@ class GroupExpanseView extends ConsumerWidget {
                     Container(
                       padding: const EdgeInsets.all(10),
                       margin: const EdgeInsets.all(20).copyWith(top: 0),
-                      decoration: AppTheme.neuDecoration,
+                      decoration: AppTheme.decoration(context),
                       alignment: Alignment.center,
                       child: Wrap(
                         alignment: WrapAlignment.spaceEvenly,
@@ -116,7 +116,8 @@ class GroupExpanseView extends ConsumerWidget {
                                   Container(
                                     margin: const EdgeInsets.all(10),
                                     padding: const EdgeInsets.all(15),
-                                    decoration: AppTheme.neuDecoration.copyWith(
+                                    decoration:
+                                        AppTheme.decoration(context).copyWith(
                                       borderRadius: BorderRadius.circular(10),
                                       boxShadow: getUser?.uid == user.uid
                                           ? [
@@ -202,7 +203,7 @@ class GroupExpanseView extends ConsumerWidget {
             child: Container(
               margin: const EdgeInsets.all(20),
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-              decoration: AppTheme.neuDecoration.copyWith(
+              decoration: AppTheme.decoration(context).copyWith(
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Row(

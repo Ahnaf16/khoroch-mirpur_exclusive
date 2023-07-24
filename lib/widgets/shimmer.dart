@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:khoroch/theme/theme.dart';
+import 'package:khoroch/widgets/neu_container.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 
 class KShimmer extends StatelessWidget {
@@ -9,13 +10,11 @@ class KShimmer extends StatelessWidget {
     super.key,
     double? height = 200,
     double? width,
-    // Color childColor = const Color(0xffd0cecc),
-  }) : child = Container(
+  }) : child = NeuContainer(
           clipBehavior: Clip.none,
           alignment: Alignment.center,
           height: height,
           width: width,
-          decoration: AppTheme.neuDecoration,
         );
 
   final Widget child;
@@ -28,7 +27,7 @@ class KShimmer extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         child: Shimmer(
           duration: const Duration(milliseconds: 2000),
-          color: AppTheme.defContentColor,
+          color: AppTheme.foregroundColor,
           child: child,
         ),
       ),

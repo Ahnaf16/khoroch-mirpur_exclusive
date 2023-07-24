@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:khoroch/core/core.dart';
 import 'package:khoroch/services/controllers/controllers.dart';
-import 'package:khoroch/services/controllers/group_ctrl.dart';
 import 'package:khoroch/services/providers/auth_provider.dart';
 import 'package:khoroch/theme/theme.dart';
 import 'package:khoroch/widgets/widgets.dart';
@@ -28,9 +27,9 @@ class CreateGroup extends ConsumerWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Container(
-                decoration: AppTheme.neuDecoration,
+                decoration: AppTheme.decoration(context),
                 child: ClipRRect(
-                  borderRadius: AppTheme.neuDecoration.borderRadius,
+                  borderRadius: AppTheme.decoration(context).borderRadius,
                   child: TextField(
                     controller: groupCtrl.nameCtrl,
                     cursorColor: Colors.grey.shade500,
@@ -42,9 +41,9 @@ class CreateGroup extends ConsumerWidget {
               ),
               const SizedBox(height: 20),
               Container(
-                decoration: AppTheme.neuDecoration,
+                decoration: AppTheme.decoration(context),
                 child: ClipRRect(
-                  borderRadius: AppTheme.neuDecoration.borderRadius,
+                  borderRadius: AppTheme.decoration(context).borderRadius,
                   child: TextField(
                     controller: userCtrl.userMailCtrl,
                     cursorColor: Colors.grey.shade500,
@@ -75,12 +74,12 @@ class CreateGroup extends ConsumerWidget {
                   return Container(
                     padding: const EdgeInsets.all(10),
                     margin: const EdgeInsets.only(bottom: 20),
-                    decoration: AppTheme.neuDecoration,
+                    decoration: AppTheme.decoration(context),
                     child: Row(
                       children: [
                         Container(
                           clipBehavior: Clip.none,
-                          decoration: AppTheme.neuDecoration.copyWith(
+                          decoration: AppTheme.decoration(context).copyWith(
                             borderRadius: BorderRadius.circular(100),
                             image: DecorationImage(
                                 image: KCachedImg(url: user.photo).provider),
@@ -147,12 +146,12 @@ class AddUserSheet extends ConsumerWidget {
                 var user = data[index];
                 return Container(
                   padding: const EdgeInsets.all(10),
-                  decoration: AppTheme.neuDecoration,
+                  decoration: AppTheme.decoration(context),
                   child: Row(
                     children: [
                       Container(
                         clipBehavior: Clip.none,
-                        decoration: AppTheme.neuDecoration.copyWith(
+                        decoration: AppTheme.decoration(context).copyWith(
                           borderRadius: BorderRadius.circular(100),
                           image: DecorationImage(
                               image: KCachedImg(url: user.photo).provider),

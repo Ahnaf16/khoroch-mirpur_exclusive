@@ -43,7 +43,7 @@ extension ContextEx on BuildContext {
           content: content,
           backgroundColor: isError
               ? AppTheme.errorColor.withOpacity(.7)
-              : AppTheme.backgroundColor,
+              : AppTheme.mainColor,
           elevation: 30,
           behavior: SnackBarBehavior.floating,
           clipBehavior: Clip.none,

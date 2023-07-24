@@ -24,7 +24,7 @@ class KAppBar extends StatelessWidget implements PreferredSizeWidget {
         height: 100,
         padding: const EdgeInsets.all(10),
         margin: const EdgeInsets.fromLTRB(20, 20, 20, 10),
-        decoration: AppTheme.neuDecoration.copyWith(
+        decoration: AppTheme.decoration(context).copyWith(
           borderRadius: BorderRadius.circular(10),
         ),
         alignment: Alignment.center,

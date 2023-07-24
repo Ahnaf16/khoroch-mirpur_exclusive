@@ -54,7 +54,7 @@ class OverlayLoader {
           child: Container(
             height: context.height / 7,
             width: context.width / 2,
-            decoration: AppTheme.neuDecoration,
+            decoration: AppTheme.decoration(context),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
