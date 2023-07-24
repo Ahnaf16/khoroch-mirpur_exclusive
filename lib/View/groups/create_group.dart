@@ -144,39 +144,39 @@ class AddUserSheet extends ConsumerWidget {
               shrinkWrap: true,
               itemBuilder: (BuildContext context, int index) {
                 var user = data[index];
-                return Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: AppTheme.decoration(context),
-                  child: Row(
-                    children: [
-                      Container(
-                        clipBehavior: Clip.none,
-                        decoration: AppTheme.decoration(context).copyWith(
-                          borderRadius: BorderRadius.circular(100),
-                          image: DecorationImage(
-                              image: KCachedImg(url: user.photo).provider),
+                return InkWell(
+                  onTap: () {
+                    groupCtrl.addUser(user);
+                    context.pop;
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: AppTheme.decoration(context),
+                    child: Row(
+                      children: [
+                        Container(
+                          clipBehavior: Clip.none,
+                          decoration: AppTheme.decoration(context).copyWith(
+                            borderRadius: BorderRadius.circular(100),
+                            image: DecorationImage(
+                                image: KCachedImg(url: user.photo).provider),
+                          ),
+                          height: 50,
+                          width: 50,
                         ),
-                        height: 50,
-                        width: 50,
-                      ),
-                      const SizedBox(width: 15),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(user.name, style: context.textTheme.bodyLarge),
-                          const SizedBox(height: 5),
-                          Text(user.email),
-                        ],
-                      ),
-                      const Spacer(),
-                      IconButton(
-                        onPressed: () {
-                          groupCtrl.addUser(user);
-                          context.pop;
-                        },
-                        icon: const Icon(Icons.arrow_forward_ios_rounded),
-                      ),
-                    ],
+                        const SizedBox(width: 15),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(user.name, style: context.textTheme.bodyLarge),
+                            const SizedBox(height: 5),
+                            Text(user.email),
+                          ],
+                        ),
+                        const Spacer(),
+                        const Icon(Icons.arrow_forward_ios_rounded),
+                      ],
+                    ),
                   ),
                 );
               },

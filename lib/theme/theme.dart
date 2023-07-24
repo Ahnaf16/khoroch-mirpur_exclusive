@@ -75,12 +75,11 @@ class AppTheme {
       ),
       progressIndicatorTheme: ProgressIndicatorThemeData(
         color: foregroundColor,
-        linearTrackColor: mainColor,
-        circularTrackColor: mainColor,
+        linearTrackColor: isDark ? mainColorDark : mainColor,
+        circularTrackColor: isDark ? mainColorDark : mainColor,
       ),
       bottomSheetTheme: BottomSheetThemeData(
         showDragHandle: true,
-        // modalBarrierColor: Colors.grey.withOpacity(.8),
         elevation: 30,
         backgroundColor: isDark ? mainColorDark : mainColor,
         shape: const RoundedRectangleBorder(
@@ -88,6 +87,11 @@ class AppTheme {
             top: Radius.circular(20),
           ),
         ),
+      ),
+      dialogTheme: DialogTheme(
+        elevation: 0,
+        backgroundColor: isDark ? mainColorDark : mainColor,
+        shadowColor: isDark ? mainColorDark : mainColor,
       ),
       textButtonTheme: TextButtonThemeData(
         style: ButtonStyle(

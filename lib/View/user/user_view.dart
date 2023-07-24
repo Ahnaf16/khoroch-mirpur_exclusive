@@ -178,8 +178,9 @@ class CashDeleteDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      elevation: 50,
-      backgroundColor: AppTheme.mainColor,
+      shape: RoundedRectangleBorder(
+        borderRadius: AppTheme.decoration(context).borderRadius!,
+      ),
       actionsAlignment: MainAxisAlignment.spaceBetween,
       actionsPadding:
           const EdgeInsets.symmetric(horizontal: 20).copyWith(bottom: 20),
@@ -272,9 +273,7 @@ class AddCashAmountDialog extends ConsumerWidget {
         ),
       ],
       actionsPadding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
-      backgroundColor: AppTheme.mainColor,
-      content: Container(
-        decoration: AppTheme.decoration(context),
+      content: NeuContainer(
         child: ClipRRect(
           borderRadius: AppTheme.decoration(context).borderRadius,
           child: TextField(

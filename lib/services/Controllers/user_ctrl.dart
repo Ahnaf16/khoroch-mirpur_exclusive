@@ -30,7 +30,7 @@ class UserCtrlNotifier extends StateNotifier<AsyncValue<List<UsersModel>>> {
     state = const AsyncValue.loading();
     if (userMailCtrl.text.isEmpty) return 0;
 
-    final res = await _repo.searchUser(userMailCtrl.text);
+    final res = await _repo.searchUser(userMailCtrl.text.trim().toLowerCase());
 
     res.fold((l) => null, (r) => _putData(r));
   }

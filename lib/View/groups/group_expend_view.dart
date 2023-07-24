@@ -49,12 +49,141 @@ class GroupExpanseView extends ConsumerWidget {
           appBar: KAppBar(
             title: group.name,
             actions: [
-              IconButton(
-                onPressed: () => context.pushTo(RouteName.trash(group.id),
-                    quarry: {'owner': group.ownerId}),
-                icon: const Icon(Icons.delete_rounded),
+              Builder(
+                builder: (context) {
+                  return IconButton(
+                    onPressed: () {
+                      Scaffold.of(context).openEndDrawer();
+                    },
+                    icon: const Icon(Icons.menu_rounded),
+                  );
+                },
               )
             ],
+          ),
+          endDrawer: NeuContainer(
+            decoration: AppTheme.decoration(context).copyWith(
+              borderRadius: const BorderRadius.horizontal(
+                left: Radius.circular(20),
+                right: Radius.circular(0),
+              ),
+            ),
+            margin: const EdgeInsets.symmetric(vertical: 20),
+            width: context.width / 1.5,
+            child: ListView(
+              children: [
+                const SizedBox(height: 10),
+                NeuListTile(
+                  onTap: () {
+                    context.pushTo(
+                      RouteName.trash(group.id),
+                      quarry: {'owner': group.ownerId},
+                    );
+                  },
+                  leading: const Icon(
+                    Icons.person_add_alt_1_rounded,
+                  ),
+                  title: const Text('Add User'),
+                ),
+                NeuListTile(
+                  onTap: () {
+                    context.pushTo(
+                      RouteName.trash(group.id),
+                      quarry: {'owner': group.ownerId},
+                    );
+                  },
+                  leading: const Icon(
+                    Icons.delete_forever_rounded,
+                  ),
+                  title: const Text('Trash'),
+                ),
+                const Divider(height: 50),
+                Center(
+                  child: Text(
+                    'Members',
+                    style: context.textTheme.titleLarge,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                ...group.users.map(
+                  (user) => GestureDetector(
+                    onTap: () => context
+                        .pushTo(RouteName.userFromGroup(groupId, user.uid)),
+                    child: Row(
+                      children: [
+                        Stack(
+                          children: [
+                            NeuContainer(
+                              margin: const EdgeInsets.all(10),
+                              padding: const EdgeInsets.all(15),
+                              decoration: AppTheme.decoration(context).copyWith(
+                                boxShadow: getUser?.uid == user.uid
+                                    ? [
+                                        BoxShadow(
+                                          blurRadius: 15,
+                                          color: context.isDark
+                                              ? Colors.blue.shade100
+                                              : Colors.blue.shade200,
+                                          offset: const Offset(0, 0),
+                                        ),
+                                      ]
+                                    : null,
+                              ),
+                              child: Row(
+                                children: [
+                                  Hero(
+                                    tag: user.uid,
+                                    child: Container(
+                                      height: 50,
+                                      width: 50,
+                                      decoration: BoxDecoration(
+                                        color: Colors.grey.shade200,
+                                        shape: BoxShape.circle,
+                                        image: DecorationImage(
+                                          fit: BoxFit.cover,
+                                          image: KCachedImg(url: user.photo)
+                                              .provider,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 10),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        user.name,
+                                        style: context.textTheme.bodyLarge,
+                                      ),
+                                      const SizedBox(height: 3),
+                                      Text(
+                                        group.cashAmount[user.uid]!.toCurrency,
+                                        style: context.textTheme.titleLarge,
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                            if (group.ownerId == user.uid)
+                              Positioned(
+                                top: 14,
+                                left: 14,
+                                child: Icon(
+                                  Icons.verified_outlined,
+                                  size: 18,
+                                  color: AppTheme.successColor,
+                                ),
+                              ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
           body: expendData.when(
             error: ErrorView.errorMathod,
@@ -99,99 +228,11 @@ class GroupExpanseView extends ConsumerWidget {
                         ],
                       ),
                     ),
-                    Container(
-                      padding: const EdgeInsets.all(10),
-                      margin: const EdgeInsets.all(20).copyWith(top: 0),
-                      decoration: AppTheme.decoration(context),
-                      alignment: Alignment.center,
-                      child: Wrap(
-                        alignment: WrapAlignment.spaceEvenly,
-                        children: [
-                          ...group.users.map(
-                            (user) => GestureDetector(
-                              onTap: () => context.pushTo(
-                                  RouteName.userFromGroup(groupId, user.uid)),
-                              child: Column(
-                                children: [
-                                  Container(
-                                    margin: const EdgeInsets.all(10),
-                                    padding: const EdgeInsets.all(15),
-                                    decoration:
-                                        AppTheme.decoration(context).copyWith(
-                                      borderRadius: BorderRadius.circular(10),
-                                      boxShadow: getUser?.uid == user.uid
-                                          ? [
-                                              BoxShadow(
-                                                blurRadius: 15,
-                                                color:
-                                                    Colors.blue.withOpacity(.2),
-                                                offset: const Offset(4, 4),
-                                              ),
-                                              BoxShadow(
-                                                blurRadius: 15,
-                                                color:
-                                                    Colors.blue.withOpacity(.2),
-                                                offset: const Offset(-4, -4),
-                                              ),
-                                            ]
-                                          : null,
-                                    ),
-                                    child: Column(
-                                      children: [
-                                        Hero(
-                                          tag: user.uid,
-                                          child: Container(
-                                            height: 50,
-                                            width: 50,
-                                            decoration: BoxDecoration(
-                                              color: Colors.grey.shade200,
-                                              shape: BoxShape.circle,
-                                              image: DecorationImage(
-                                                fit: BoxFit.cover,
-                                                image:
-                                                    KCachedImg(url: user.photo)
-                                                        .provider,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        const SizedBox(height: 10),
-                                        Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Text(
-                                              user.name.split(' ').first,
-                                              style:
-                                                  context.textTheme.bodyLarge,
-                                            ),
-                                            if (group.ownerId == user.uid)
-                                              const Icon(
-                                                Icons.verified_outlined,
-                                                size: 18,
-                                              ),
-                                          ],
-                                        ),
-                                        Text(
-                                          group
-                                              .cashAmount[user.uid]!.toCurrency,
-                                          style: context.textTheme.titleLarge,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 10),
                     Text(
                       'Expenditure',
                       style: context.textTheme.titleLarge,
                     ),
-                    const SizedBox(height: 5),
+                    const SizedBox(height: 10),
                     ExpenditureList(expenders: expenders, group: group)
                   ],
                 ),
