@@ -14,7 +14,7 @@ class AppTheme {
 
   static BoxDecoration _roundedDecoration(bool isDark) {
     return BoxDecoration(
-      color: mainColor,
+      color: isDark ? mainColorDark : mainColor,
       shape: BoxShape.circle,
       boxShadow: _boxShadows(isDark),
     );

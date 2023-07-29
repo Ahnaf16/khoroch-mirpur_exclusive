@@ -1,50 +1,43 @@
-import 'dart:developer';
-
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:khoroch/core/core.dart';
 import 'package:khoroch/models/models.dart';
 import 'package:khoroch/services/repository/repository.dart';
 
 final userCtrlProvider =
-    StateNotifierProvider<UserCtrlNotifier, AsyncValue<List<UsersModel>>>(
-        (ref) {
-  return UserCtrlNotifier(ref);
+    StateNotifierProvider<UserCtrlNotifier, (UsersModel, bool)>((ref) {
+  return UserCtrlNotifier(ref).._init();
 });
 
-class UserCtrlNotifier extends StateNotifier<AsyncValue<List<UsersModel>>> {
-  UserCtrlNotifier(this._ref) : super(const AsyncValue.data([]));
+class UserCtrlNotifier extends StateNotifier<(UsersModel, bool)> {
+  UserCtrlNotifier(this._ref) : super((UsersModel.empty, false));
 
   final Ref _ref;
-  final userMailCtrl = TextEditingController();
+  final userNameCtrl = TextEditingController();
 
   UserRepo get _repo => _ref.watch(userRepoProvider);
 
-  Future<UsersModel> getCurrentUser() async {
+  _init() async {
     final res = await _repo.getCurrentUser();
 
-    return res;
+    state = (res, false);
+
+    userNameCtrl.text = state.$1.userName;
   }
 
-  searchUser([String? query]) async {
-    state = const AsyncValue.loading();
-    if (query != null) userMailCtrl.text = query;
-    if (userMailCtrl.text.isEmpty) return 0;
+  selectImage() async {}
 
-    final res = await _repo.searchUser(userMailCtrl.text.trim().toLowerCase());
+  updateUser(BuildContext context) async {
+    state = (state.$1.copyWith(userName: userNameCtrl.text), false);
+    final res = await _repo.updateUser(state.$1);
 
-    res.fold((l) => null, (r) => _putData(r));
+    res.fold(
+      (l) => context.showOverLay.showError(l.message),
+      (r) => context.showOverLay.showSuccess(r),
+    );
   }
 
-  createUserDoc(context, User user) async {
-    await _repo.createUserDoc(user);
-    log('user Created');
-  }
-
-  _putData(Stream<List<UsersModel>> userStream) async {
-    await for (final user in userStream) {
-      log(user.length.toString());
-      state = AsyncValue.data(user);
-    }
+  toggleEditing() {
+    state = (state.$1, !state.$2);
   }
 }

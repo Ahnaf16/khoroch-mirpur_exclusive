@@ -7,6 +7,7 @@ import 'package:khoroch/View/groups/create_group.dart';
 import 'package:khoroch/View/groups/group_expend_view.dart';
 import 'package:khoroch/View/home/home_view.dart';
 import 'package:khoroch/View/trash/trash_view.dart';
+import 'package:khoroch/View/user/user_profile.dart';
 import 'package:khoroch/View/user/user_view.dart';
 import 'package:khoroch/routes/pages/splash.dart';
 import 'package:khoroch/services/controllers/controllers.dart';
@@ -21,6 +22,7 @@ class RouteName {
   static String userFromGroup(gid, uid) => '${group(gid)}/$uid';
   static const String createGroup = '$home/create_group';
   static const String splash = '/splash';
+  static const String profile = '/profile';
   static String trash(gid) => '${group(gid)}/trash';
 }
 
@@ -78,6 +80,8 @@ final routesProvider = Provider<RoutemasterDelegate>((ref) {
               splashGuard(page: const MaterialPage(child: LoginPage())),
           RouteName.home: (route) =>
               splashGuard(page: const MaterialPage(child: HomeView())),
+          RouteName.profile: (route) =>
+              splashGuard(page: const MaterialPage(child: UserProfile())),
           RouteName.group(':gid'): (route) {
             final id = route.pathParameters['gid'];
             return splashGuard(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:khoroch/core/core.dart';
+import 'package:khoroch/routes/route_config.dart';
 import 'package:khoroch/services/controllers/controllers.dart';
 import 'package:khoroch/services/providers/auth_provider.dart';
 import 'package:khoroch/theme/theme.dart';
@@ -32,10 +33,30 @@ class AppDrawer extends ConsumerWidget {
             child: ListView(
               children: [
                 const SizedBox(height: 10),
-                NeuContainer(
-                  decoration: AppTheme.decoration(context),
-                  margin: const EdgeInsets.all(20),
-                  child: KCachedImg(url: getUser!.photoURL!),
+                Stack(
+                  children: [
+                    NeuContainer(
+                      decoration: AppTheme.decoration(context),
+                      margin: const EdgeInsets.all(20),
+                      child: KCachedImg(
+                        url: getUser!.photoURL!,
+                        width: double.maxFinite,
+                      ),
+                    ),
+                    Positioned(
+                      right: 10,
+                      top: 10,
+                      child: InkWell(
+                        onTap: () => context.pushTo(RouteName.profile),
+                        child: NeuContainer(
+                          padding: const EdgeInsets.all(5),
+                          decoration:
+                              AppTheme.decoration(context, useRound: true),
+                          child: const Icon(Icons.edit_rounded),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 NeuListTile(
                   onTap: () => themeCtrl.setThemeMode(!context.isDark),

@@ -6,11 +6,13 @@ import 'package:khoroch/theme/theme.dart';
 import 'package:khoroch/widgets/widgets.dart';
 
 class AddUserSheet extends ConsumerWidget {
-  const AddUserSheet({super.key});
+  const AddUserSheet({this.gid, super.key});
+
+  final String? gid;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final users = ref.watch(userCtrlProvider);
+    final users = ref.watch(userListCtrlProvider);
     final groupCtrl = ref.read(groupCtrlProvider.notifier);
 
     return Padding(
@@ -19,10 +21,19 @@ class AddUserSheet extends ConsumerWidget {
         children: [
           KTextBox(
             controller: groupCtrl.searchCtrl,
-            labelText: 'User Mail',
-            suffixIcon: IconButton(
-              onPressed: () => groupCtrl.searchUser(context),
-              icon: const Icon(Icons.search_rounded),
+            labelText: 'Search User',
+            suffixIcon: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                  onPressed: () => groupCtrl.searchCtrl.clear(),
+                  icon: const Icon(Icons.clear_rounded),
+                ),
+                IconButton(
+                  onPressed: () => groupCtrl.searchUser(context),
+                  icon: const Icon(Icons.search_rounded),
+                ),
+              ],
             ),
           ),
           const SizedBox(height: 30),
@@ -36,8 +47,12 @@ class AddUserSheet extends ConsumerWidget {
                 var user = data[index];
                 return InkWell(
                   onTap: () {
-                    groupCtrl.addUser(user);
-                    context.pop;
+                    if (gid != null) {
+                      groupCtrl.updateNewUser(context, gid!, user);
+                    } else {
+                      groupCtrl.addUser(user);
+                      context.pop;
+                    }
                   },
                   child: Container(
                     padding: const EdgeInsets.all(10),

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:khoroch/services/providers/auth_provider.dart';
 
 enum GroupRole {
   owner,
@@ -11,10 +12,11 @@ enum GroupRole {
 
 class UsersModel {
   UsersModel({
+    required this.email,
     required this.name,
     required this.photo,
     required this.uid,
-    required this.email,
+    required this.userName,
   });
 
   factory UsersModel.fromDoc(DocumentSnapshot doc) {
@@ -23,6 +25,7 @@ class UsersModel {
       photo: doc['photo'],
       uid: doc['uid'] ?? '',
       email: doc['email'] ?? '',
+      userName: doc['userName'],
     );
   }
 
@@ -32,20 +35,23 @@ class UsersModel {
       name: map['name'] ?? '',
       photo: map['photo'] ?? '',
       uid: map['uid'] ?? '',
+      userName: map['userName'],
     );
   }
 
   static UsersModel empty = UsersModel(
     name: '',
-    photo: '',
+    photo: getUser?.photoURL ?? '',
     uid: '',
     email: '',
+    userName: '',
   );
 
   final String email;
   final String name;
   final String photo;
   final String uid;
+  final String userName;
 
   Map<String, dynamic> toMap() {
     final result = <String, dynamic>{};
@@ -53,6 +59,7 @@ class UsersModel {
     result.addAll({'name': name});
     result.addAll({'photo': photo});
     result.addAll({'uid': uid});
+    result.addAll({'userName': userName});
 
     return result;
   }
@@ -62,12 +69,14 @@ class UsersModel {
     String? photo,
     String? uid,
     String? email,
+    String? userName,
   }) {
     return UsersModel(
       name: name ?? this.name,
       photo: photo ?? this.photo,
       uid: uid ?? this.uid,
       email: email ?? this.email,
+      userName: userName ?? this.userName,
     );
   }
 }
@@ -80,6 +89,15 @@ class CashCollection {
     required this.user,
   });
 
+  factory CashCollection.fromDoc(DocumentSnapshot doc) {
+    return CashCollection(
+      amount: doc['amount']?.toInt() ?? 0,
+      date: (doc['date'] as Timestamp).toDate(),
+      id: doc['id'],
+      user: UsersModel.fromMap(doc['user']),
+    );
+  }
+
   factory CashCollection.fromMap(Map<String, dynamic> map) {
     return CashCollection(
       amount: map['amount']?.toInt() ?? 0,
@@ -89,14 +107,12 @@ class CashCollection {
     );
   }
 
-  factory CashCollection.fromDoc(DocumentSnapshot doc) {
-    return CashCollection(
-      amount: doc['amount']?.toInt() ?? 0,
-      date: (doc['date'] as Timestamp).toDate(),
-      id: doc['id'],
-      user: UsersModel.fromMap(doc['user']),
-    );
-  }
+  static CashCollection empty = CashCollection(
+    amount: 0,
+    date: DateTime.now(),
+    id: '',
+    user: UsersModel.empty,
+  );
 
   final int amount;
   final DateTime date;
@@ -127,11 +143,4 @@ class CashCollection {
 
     return result;
   }
-
-  static CashCollection empty = CashCollection(
-    amount: 0,
-    date: DateTime.now(),
-    id: '',
-    user: UsersModel.empty,
-  );
 }

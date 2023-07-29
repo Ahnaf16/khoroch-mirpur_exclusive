@@ -40,7 +40,7 @@ class GroupInfoDrawer extends ConsumerWidget {
               if (group.ownerId == getUser!.uid) {
                 showModalBottomSheet(
                   context: context,
-                  builder: (context) => const AddUserSheet(),
+                  builder: (context) => AddUserSheet(gid: group.id),
                 );
               } else {
                 context.pop;

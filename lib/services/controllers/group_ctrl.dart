@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -7,6 +9,7 @@ import 'package:khoroch/models/models.dart';
 import 'package:khoroch/services/controllers/controllers.dart';
 import 'package:khoroch/services/repository/group_repo.dart';
 import 'package:khoroch/services/repository/repository.dart';
+import 'package:khoroch/widgets/widgets.dart';
 import 'package:nanoid/nanoid.dart';
 
 final groupCtrlProvider =
@@ -14,7 +17,6 @@ final groupCtrlProvider =
   return GroupCtrlNotifier(ref).._init();
 });
 
-//! add group id from family provider
 class GroupCtrlNotifier extends StateNotifier<GroupModel> {
   GroupCtrlNotifier(this._ref) : super(GroupModel.empty);
 
@@ -116,22 +118,48 @@ class GroupCtrlNotifier extends StateNotifier<GroupModel> {
     );
   }
 
-  updateNewUser(
-      BuildContext context, String groupId, int amount, bool isAdd) async {
+  //* add new user in existing group
+  updateNewUser(BuildContext context, String groupId, UsersModel user) async {
     final group = await _repo.getGroup(groupId);
 
-    final total = switch (isAdd) {
-      true => group.totalExpanse + amount,
-      false => group.totalExpanse - amount
-    };
+    state = group;
+    final exist = state.users.any((element) => element.uid == user.uid);
+    if (exist) {
+      context.showOverLay.showError('User Exists');
+      return 0;
+    }
 
-    final updatedGroup = group.copyWith(totalExpanse: total);
+    addUser(user);
+    await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Add New User'),
+        content: Text('Add "${user.name}" to the group.'),
+        actions: [
+          NeuButton(
+            height: 50,
+            width: 50,
+            onTap: () => context.pop,
+            child: const Icon(Icons.close_rounded),
+          ),
+          NeuButton(
+            height: 50,
+            width: 150,
+            onTap: () async {
+              context.showOverLay.show('Loading');
+              final res = await _repo.updateGroup(state);
 
-    final res = await _repo.updateGroup(updatedGroup);
+              res.fold(
+                (l) => context.showOverLay.showError(l.message),
+                (r) => context.showOverLay.showSuccess(r),
+              );
 
-    res.fold(
-      (l) => context.showOverLay.showError(l.message),
-      (r) => context.showOverLay.showSuccess(r),
+              context.pop;
+            },
+            child: const Text('Add'),
+          ),
+        ],
+      ),
     );
   }
 
@@ -144,7 +172,7 @@ class GroupCtrlNotifier extends StateNotifier<GroupModel> {
   searchUser(BuildContext context) {
     context.removeFocus();
 
-    final userCtrl = _ref.read(userCtrlProvider.notifier);
+    final userCtrl = _ref.read(userListCtrlProvider.notifier);
 
     userCtrl.searchUser(searchCtrl.text);
   }

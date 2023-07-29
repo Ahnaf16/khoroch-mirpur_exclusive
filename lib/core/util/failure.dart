@@ -31,6 +31,14 @@ class Failure {
     );
   }
 
+  factory Failure.fromFire(FirebaseException exc) {
+    return Failure(
+      exc.message ?? 'Something Went Wrong',
+      stackTrace: exc.stackTrace,
+      subMessage: exc.code,
+    );
+  }
+
   @override
   String toString() {
     return 'Failure(message: $message, subMessage: $subMessage, stackTrace: $stackTrace)';

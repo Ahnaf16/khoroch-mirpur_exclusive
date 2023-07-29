@@ -16,8 +16,13 @@ class UserRepo {
   final _fire = FirebaseFirestore.instance;
 
   FutureEither<Stream<List<UsersModel>>> searchUser(String query) async {
-    final snap = _coll().where('email', isEqualTo: query).snapshots();
-    log(query);
+    query = query.replaceAll(' ', '_').toLowerCase();
+    final field = query.isEmail ? 'email' : 'userName';
+
+    final snap = _coll()
+        .where(field, isEqualTo: query)
+        .where('email', isNotEqualTo: getUser!.email)
+        .snapshots();
 
     final res = snap.map((snapshot) =>
         snapshot.docs.map((doc) => UsersModel.fromDoc(doc)).toList());
@@ -39,7 +44,9 @@ class UserRepo {
         name: fireUser.displayName ?? '',
         photo: fireUser.photoURL ?? '',
         uid: fireUser.uid,
-        email: fireUser.email ?? '',
+        email: fireUser.email!,
+        userName: fireUser.displayName?.replaceAll(' ', '_').toLowerCase() ??
+            fireUser.email!,
       );
       final doc = _coll().doc(user.uid);
       final e = await doc.get();
@@ -48,6 +55,17 @@ class UserRepo {
       }
     } on FirebaseException catch (exc) {
       log(exc.message ?? 'Something went wrong');
+    }
+  }
+
+  FutureEither<String> updateUser(UsersModel user) async {
+    try {
+      final docRef = _coll().doc(user.uid);
+
+      await docRef.update(user.toMap());
+      return right('User updated');
+    } on FirebaseException catch (exc) {
+      return left(Failure.fromFire(exc));
     }
   }
 
