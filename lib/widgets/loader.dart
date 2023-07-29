@@ -33,7 +33,7 @@ class OverlayLoader {
     _show(message: message, type: SnackType.success);
   }
 
-  void remove(BuildContext context) {
+  void remove() {
     if (_onScreen) {
       _overlayEntry!.remove();
       _onScreen = false;
@@ -48,7 +48,7 @@ class OverlayLoader {
   }) {
     return OverlayEntry(
       builder: (context) => GestureDetector(
-        onTap: () => remove(context),
+        onTap: () => remove(),
         child: Align(
           alignment: alignment,
           child: Container(
@@ -77,7 +77,7 @@ class OverlayLoader {
   void _show({String message = '', required SnackType type}) async {
     FocusScope.of(context).requestFocus(FocusNode());
 
-    remove(context);
+    remove();
 
     _overlayEntry = createOverlayEntry(message: message, type: type);
 
@@ -87,6 +87,6 @@ class OverlayLoader {
 
     await Future.delayed(const Duration(milliseconds: 3000));
 
-    remove(context);
+    remove();
   }
 }

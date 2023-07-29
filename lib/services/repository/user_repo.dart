@@ -17,6 +17,7 @@ class UserRepo {
 
   FutureEither<Stream<List<UsersModel>>> searchUser(String query) async {
     final snap = _coll().where('email', isEqualTo: query).snapshots();
+    log(query);
 
     final res = snap.map((snapshot) =>
         snapshot.docs.map((doc) => UsersModel.fromDoc(doc)).toList());

@@ -38,15 +38,15 @@ class AppDrawer extends ConsumerWidget {
                   child: KCachedImg(url: getUser!.photoURL!),
                 ),
                 NeuListTile(
-                  onTap: () {},
+                  onTap: () => themeCtrl.setThemeMode(!context.isDark),
                   leading: Icon(
                     context.isDark
                         ? Icons.dark_mode_rounded
                         : Icons.light_mode_rounded,
                   ),
                   title: context.isDark
-                      ? const Text('Change to light theme')
-                      : const Text('Change to dark theme'),
+                      ? const Text('Enable light theme')
+                      : const Text('Enable dark theme'),
                   trailing: Switch(
                     value: context.isDark,
                     onChanged: (value) => themeCtrl.setThemeMode(value),

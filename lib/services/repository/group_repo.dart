@@ -41,4 +41,18 @@ class GroupRepo {
       return left(Failure(e.message ?? 'n'));
     }
   }
+
+  FutureEither<String> deleteGroup(String id) async {
+    try {
+      final batch = _fire.batch();
+      final doc = _coll.doc(id);
+
+      batch.delete(doc);
+      await batch.commit();
+      return right('Group Delete');
+    } on FirebaseException catch (e) {
+      log(e.message ?? 'n');
+      return left(Failure(e.message ?? 'n'));
+    }
+  }
 }

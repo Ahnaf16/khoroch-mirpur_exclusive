@@ -26,8 +26,9 @@ class UserCtrlNotifier extends StateNotifier<AsyncValue<List<UsersModel>>> {
     return res;
   }
 
-  searchUser() async {
+  searchUser([String? query]) async {
     state = const AsyncValue.loading();
+    if (query != null) userMailCtrl.text = query;
     if (userMailCtrl.text.isEmpty) return 0;
 
     final res = await _repo.searchUser(userMailCtrl.text.trim().toLowerCase());
@@ -40,9 +41,10 @@ class UserCtrlNotifier extends StateNotifier<AsyncValue<List<UsersModel>>> {
     log('user Created');
   }
 
-  _putData(Stream<List<UsersModel>> orderStream) async {
-    await for (final orders in orderStream) {
-      state = AsyncValue.data(orders);
+  _putData(Stream<List<UsersModel>> userStream) async {
+    await for (final user in userStream) {
+      log(user.length.toString());
+      state = AsyncValue.data(user);
     }
   }
 }

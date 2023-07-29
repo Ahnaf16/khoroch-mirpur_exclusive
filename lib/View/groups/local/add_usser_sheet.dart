@@ -1,0 +1,79 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:khoroch/core/core.dart';
+import 'package:khoroch/services/controllers/controllers.dart';
+import 'package:khoroch/theme/theme.dart';
+import 'package:khoroch/widgets/widgets.dart';
+
+class AddUserSheet extends ConsumerWidget {
+  const AddUserSheet({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final users = ref.watch(userCtrlProvider);
+    final groupCtrl = ref.read(groupCtrlProvider.notifier);
+
+    return Padding(
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        children: [
+          KTextBox(
+            controller: groupCtrl.searchCtrl,
+            labelText: 'User Mail',
+            suffixIcon: IconButton(
+              onPressed: () => groupCtrl.searchUser(context),
+              icon: const Icon(Icons.search_rounded),
+            ),
+          ),
+          const SizedBox(height: 30),
+          users.when(
+            error: ErrorView.errorMathod,
+            loading: () => const Loader(isList: true),
+            data: (data) => ListView.builder(
+              itemCount: data.length,
+              shrinkWrap: true,
+              itemBuilder: (BuildContext context, int index) {
+                var user = data[index];
+                return InkWell(
+                  onTap: () {
+                    groupCtrl.addUser(user);
+                    context.pop;
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: AppTheme.decoration(context),
+                    child: Row(
+                      children: [
+                        Container(
+                          clipBehavior: Clip.none,
+                          decoration: AppTheme.decoration(context).copyWith(
+                            borderRadius: BorderRadius.circular(100),
+                            image: DecorationImage(
+                                image: KCachedImg(url: user.photo).provider),
+                          ),
+                          height: 50,
+                          width: 50,
+                        ),
+                        const SizedBox(width: 15),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(user.name, style: context.textTheme.bodyLarge),
+                            const SizedBox(height: 5),
+                            Text(user.email),
+                          ],
+                        ),
+                        const Spacer(),
+                        const Icon(Icons.arrow_forward_ios_rounded),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}

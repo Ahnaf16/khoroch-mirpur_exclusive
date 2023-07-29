@@ -4,10 +4,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:khoroch/View/groups/local/expense_sheet.dart';
 import 'package:khoroch/View/groups/local/expenditure_list.dart';
+import 'package:khoroch/View/groups/local/info_drawer.dart';
 import 'package:khoroch/View/groups/local/show_balance.dart';
 import 'package:khoroch/core/extensions.dart';
 import 'package:khoroch/models/models.dart';
-import 'package:khoroch/routes/route_config.dart';
 import 'package:khoroch/services/providers/groups_provider.dart';
 import 'package:khoroch/services/providers/providers.dart';
 import 'package:khoroch/theme/theme.dart';
@@ -61,130 +61,7 @@ class GroupExpanseView extends ConsumerWidget {
               )
             ],
           ),
-          endDrawer: NeuContainer(
-            decoration: AppTheme.decoration(context).copyWith(
-              borderRadius: const BorderRadius.horizontal(
-                left: Radius.circular(20),
-                right: Radius.circular(0),
-              ),
-            ),
-            margin: const EdgeInsets.symmetric(vertical: 20),
-            width: context.width / 1.5,
-            child: ListView(
-              children: [
-                const SizedBox(height: 10),
-                NeuListTile(
-                  onTap: () {
-                    context.pushTo(
-                      RouteName.trash(group.id),
-                      quarry: {'owner': group.ownerId},
-                    );
-                  },
-                  leading: const Icon(
-                    Icons.person_add_alt_1_rounded,
-                  ),
-                  title: const Text('Add User'),
-                ),
-                NeuListTile(
-                  onTap: () {
-                    context.pushTo(
-                      RouteName.trash(group.id),
-                      quarry: {'owner': group.ownerId},
-                    );
-                  },
-                  leading: const Icon(
-                    Icons.delete_forever_rounded,
-                  ),
-                  title: const Text('Trash'),
-                ),
-                const Divider(height: 50),
-                Center(
-                  child: Text(
-                    'Members',
-                    style: context.textTheme.titleLarge,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                ...group.users.map(
-                  (user) => GestureDetector(
-                    onTap: () => context
-                        .pushTo(RouteName.userFromGroup(groupId, user.uid)),
-                    child: Row(
-                      children: [
-                        Stack(
-                          children: [
-                            NeuContainer(
-                              margin: const EdgeInsets.all(10),
-                              padding: const EdgeInsets.all(15),
-                              decoration: AppTheme.decoration(context).copyWith(
-                                boxShadow: getUser?.uid == user.uid
-                                    ? [
-                                        BoxShadow(
-                                          blurRadius: 15,
-                                          color: context.isDark
-                                              ? Colors.blue.shade100
-                                              : Colors.blue.shade200,
-                                          offset: const Offset(0, 0),
-                                        ),
-                                      ]
-                                    : null,
-                              ),
-                              child: Row(
-                                children: [
-                                  Hero(
-                                    tag: user.uid,
-                                    child: Container(
-                                      height: 50,
-                                      width: 50,
-                                      decoration: BoxDecoration(
-                                        color: Colors.grey.shade200,
-                                        shape: BoxShape.circle,
-                                        image: DecorationImage(
-                                          fit: BoxFit.cover,
-                                          image: KCachedImg(url: user.photo)
-                                              .provider,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 10),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        user.name,
-                                        style: context.textTheme.bodyLarge,
-                                      ),
-                                      const SizedBox(height: 3),
-                                      Text(
-                                        group.cashAmount[user.uid]!.toCurrency,
-                                        style: context.textTheme.titleLarge,
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                            if (group.ownerId == user.uid)
-                              Positioned(
-                                top: 14,
-                                left: 14,
-                                child: Icon(
-                                  Icons.verified_outlined,
-                                  size: 18,
-                                  color: AppTheme.successColor,
-                                ),
-                              ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
+          endDrawer: GroupInfoDrawer(group: group),
           body: expendData.when(
             error: ErrorView.errorMathod,
             loading: () => const Loader(isList: true),

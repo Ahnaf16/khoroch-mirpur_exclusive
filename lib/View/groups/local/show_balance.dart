@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:khoroch/core/extensions.dart';
+import 'package:khoroch/theme/theme.dart';
 
 class ShowBalance extends StatelessWidget {
   const ShowBalance({
@@ -24,7 +25,7 @@ class ShowBalance extends StatelessWidget {
         Text(
           total.toCurrency,
           style: context.textTheme.titleLarge?.copyWith(
-            color: warn ? Colors.red.shade300 : Colors.green.shade300,
+            color: warn ? AppTheme.errorColor : AppTheme.successColor,
           ),
         ),
       ],

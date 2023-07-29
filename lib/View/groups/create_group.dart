@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:khoroch/View/groups/local/add_usser_sheet.dart';
 import 'package:khoroch/core/core.dart';
 import 'package:khoroch/services/controllers/controllers.dart';
 import 'package:khoroch/services/providers/auth_provider.dart';
@@ -13,7 +14,6 @@ class CreateGroup extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final group = ref.watch(groupCtrlProvider);
     final groupCtrl = ref.read(groupCtrlProvider.notifier);
-    final userCtrl = ref.read(userCtrlProvider.notifier);
 
     return Scaffold(
       appBar: AppBar(
@@ -26,42 +26,28 @@ class CreateGroup extends ConsumerWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Container(
-                decoration: AppTheme.decoration(context),
-                child: ClipRRect(
-                  borderRadius: AppTheme.decoration(context).borderRadius,
-                  child: TextField(
-                    controller: groupCtrl.nameCtrl,
-                    cursorColor: Colors.grey.shade500,
-                    decoration: const InputDecoration(
-                      labelText: 'Group Name',
-                    ),
-                  ),
-                ),
+              KTextBox(
+                controller: groupCtrl.nameCtrl,
+                labelText: 'Group Name',
               ),
               const SizedBox(height: 20),
-              Container(
-                decoration: AppTheme.decoration(context),
-                child: ClipRRect(
-                  borderRadius: AppTheme.decoration(context).borderRadius,
-                  child: TextField(
-                    controller: userCtrl.userMailCtrl,
-                    cursorColor: Colors.grey.shade500,
-                    decoration: InputDecoration(
-                      labelText: 'User Mail',
-                      suffixIcon: IconButton(
-                        onPressed: () {
-                          groupCtrl.searchUser(context);
-                        },
-                        icon: const Icon(Icons.search_rounded),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Users', style: context.textTheme.titleLarge),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: IconButton(
+                      onPressed: () => showModalBottomSheet(
+                        context: context,
+                        builder: (context) => const AddUserSheet(),
                       ),
+                      icon: const Icon(Icons.person_add_alt_1_outlined),
                     ),
                   ),
-                ),
+                ],
               ),
-              const SizedBox(height: 25),
-              Text('Users', style: context.textTheme.bodyLarge),
-              const SizedBox(height: 10),
+              const SizedBox(height: 20),
               ListView.builder(
                 physics: const ScrollPhysics(),
                 itemCount: group.users.length,
@@ -109,7 +95,7 @@ class CreateGroup extends ConsumerWidget {
                   );
                 },
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 20),
               NeuButton(
                 onTap: () => groupCtrl.createGroupe(context),
                 height: 50,
@@ -119,70 +105,6 @@ class CreateGroup extends ConsumerWidget {
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class AddUserSheet extends ConsumerWidget {
-  const AddUserSheet({super.key});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final users = ref.watch(userCtrlProvider);
-    final groupCtrl = ref.read(groupCtrlProvider.notifier);
-
-    return Padding(
-      padding: const EdgeInsets.all(20),
-      child: Column(
-        children: [
-          users.when(
-            error: ErrorView.errorMathod,
-            loading: () => const Loader(isList: true),
-            data: (data) => ListView.builder(
-              itemCount: data.length,
-              shrinkWrap: true,
-              itemBuilder: (BuildContext context, int index) {
-                var user = data[index];
-                return InkWell(
-                  onTap: () {
-                    groupCtrl.addUser(user);
-                    context.pop;
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: AppTheme.decoration(context),
-                    child: Row(
-                      children: [
-                        Container(
-                          clipBehavior: Clip.none,
-                          decoration: AppTheme.decoration(context).copyWith(
-                            borderRadius: BorderRadius.circular(100),
-                            image: DecorationImage(
-                                image: KCachedImg(url: user.photo).provider),
-                          ),
-                          height: 50,
-                          width: 50,
-                        ),
-                        const SizedBox(width: 15),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(user.name, style: context.textTheme.bodyLarge),
-                            const SizedBox(height: 5),
-                            Text(user.email),
-                          ],
-                        ),
-                        const Spacer(),
-                        const Icon(Icons.arrow_forward_ios_rounded),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            ),
-          )
-        ],
       ),
     );
   }

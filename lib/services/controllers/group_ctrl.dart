@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:khoroch/View/groups/create_group.dart';
 import 'package:khoroch/core/extensions.dart';
 import 'package:khoroch/models/models.dart';
 import 'package:khoroch/services/controllers/controllers.dart';
@@ -15,12 +14,15 @@ final groupCtrlProvider =
   return GroupCtrlNotifier(ref).._init();
 });
 
+//! add group id from family provider
 class GroupCtrlNotifier extends StateNotifier<GroupModel> {
   GroupCtrlNotifier(this._ref) : super(GroupModel.empty);
 
   final Ref _ref;
 
   final nameCtrl = TextEditingController();
+  final searchCtrl = TextEditingController();
+
   UserRepo get _userRepo => _ref.watch(userRepoProvider);
   GroupRepo get _repo => _ref.watch(groupRepoProvider);
 
@@ -92,6 +94,29 @@ class GroupCtrlNotifier extends StateNotifier<GroupModel> {
   }
 
   updateTotalExpanse(
+    BuildContext context,
+    String groupId,
+    int amount,
+    bool isAdd,
+  ) async {
+    final group = await _repo.getGroup(groupId);
+
+    final total = switch (isAdd) {
+      true => group.totalExpanse + amount,
+      false => group.totalExpanse - amount
+    };
+
+    final updatedGroup = group.copyWith(totalExpanse: total);
+
+    final res = await _repo.updateGroup(updatedGroup);
+
+    res.fold(
+      (l) => context.showOverLay.showError(l.message),
+      (r) => context.showOverLay.showSuccess(r),
+    );
+  }
+
+  updateNewUser(
       BuildContext context, String groupId, int amount, bool isAdd) async {
     final group = await _repo.getGroup(groupId);
 
@@ -118,16 +143,10 @@ class GroupCtrlNotifier extends StateNotifier<GroupModel> {
 
   searchUser(BuildContext context) {
     context.removeFocus();
+
     final userCtrl = _ref.read(userCtrlProvider.notifier);
 
-    if (userCtrl.userMailCtrl.text.isEmpty) return 0;
-
-    userCtrl.searchUser();
-
-    showModalBottomSheet(
-      context: context,
-      builder: (context) => const AddUserSheet(),
-    );
+    userCtrl.searchUser(searchCtrl.text);
   }
 
   addUser(UsersModel user) {
@@ -157,6 +176,18 @@ class GroupCtrlNotifier extends StateNotifier<GroupModel> {
       users: user,
       usersId: userId,
       roles: roles,
+    );
+  }
+
+  deleteGroup(BuildContext context, String id) async {
+    context.pop;
+    context.rPop;
+
+    final res = await _repo.deleteGroup(id);
+
+    res.fold(
+      (l) => context.showOverLay.showError(l.message),
+      (r) => context.showOverLay.showSuccess(r),
     );
   }
 }

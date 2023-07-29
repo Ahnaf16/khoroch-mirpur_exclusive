@@ -46,6 +46,7 @@ class NeuButton extends StatelessWidget {
           child: Container(
             clipBehavior: Clip.none,
             decoration: AppTheme.decoration(context),
+            margin: const EdgeInsets.all(10),
             alignment: Alignment.center,
             height: height ?? 50,
             width: width,

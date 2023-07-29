@@ -4,6 +4,7 @@ export 'cached_img.dart';
 export 'divider.dart';
 export 'error_loading.dart';
 export 'expans_tile.dart';
+export 'k_text_box.dart';
 export 'loader.dart';
 export 'neu_container.dart';
 export 'neu_list_tile.dart';
